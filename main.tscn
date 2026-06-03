@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://c3m3561eor555"]
+
+[ext_resource type="Script" uid="uid://dis1g6xhrjrql" path="res://main.gd" id="1_ig7tw"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_7dm0k"]
+font_size = 32
+
+[node name="Main" type="Node" unique_id=1580518421]
+script = ExtResource("1_ig7tw")
+
+[node name="Control" type="MarginContainer" parent="." unique_id=74089873]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=874819999]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/VBoxContainer" unique_id=2031388226]
+layout_mode = 2
+text = "SV Jukebox Example Game"
+label_settings = SubResource("LabelSettings_7dm0k")
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/VBoxContainer" unique_id=1218786121]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/HBoxContainer2" unique_id=1638810103]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=1899108296]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+text = "Press buttons to simulate music playing, unlocking, or stopping through gameplay:"
+autowrap_mode = 3
+
+[node name="GridContainer" type="GridContainer" parent="Control/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=2104768591]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="PlayInvasionButton" type="Button" parent="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=835201631]
+layout_mode = 2
+text = "Play Invasion"
+
+[node name="UnlockInvasionButton2" type="Button" parent="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=592211313]
+layout_mode = 2
+text = "Unlock Invasion"
+
+[node name="PlayAnxietyButton" type="Button" parent="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=511238767]
+layout_mode = 2
+text = "Play Anxiety"
+
+[node name="UnlockAnxietyButton" type="Button" parent="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1371751188]
+layout_mode = 2
+text = "Unlock Anxiety"
+
+[node name="PlayPetraButton" type="Button" parent="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1623010966]
+layout_mode = 2
+text = "Play Petra"
+
+[node name="UnlockPetraButton" type="Button" parent="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1929231842]
+layout_mode = 2
+text = "Unlock Petra"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer" unique_id=1906157803]
+layout_mode = 2
+
+[node name="QuitButton" type="Button" parent="Control/VBoxContainer/HBoxContainer" unique_id=1050659302]
+layout_mode = 2
+text = "Quit Game"
+
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/PlayInvasionButton" to="." method="_on_play_invasion_button_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/UnlockInvasionButton2" to="." method="_on_unlock_invasion_button_2_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/PlayAnxietyButton" to="." method="_on_play_anxiety_button_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/UnlockAnxietyButton" to="." method="_on_unlock_anxiety_button_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/PlayPetraButton" to="." method="_on_play_petra_button_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/UnlockPetraButton" to="." method="_on_unlock_petra_button_pressed"]
+[connection signal="pressed" from="Control/VBoxContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
