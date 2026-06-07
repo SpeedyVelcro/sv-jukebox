@@ -3,6 +3,7 @@ extends Node
 ##
 ## Autoloaded as SVJukebox. This singleton node provides methods for basic
 ## music playing functionality and managing music unlocks.
+# TODO: Consider using AudioStreamPolyphonic instead of having multiple AudioStreamPlayers.
 
 ## How to transition between tracks when playing a new one with [method play].
 enum TransitionType {
@@ -17,14 +18,26 @@ enum TransitionType {
 	CROSS_FADE
 }
 
+var _album: AlbumInfo = null
 var _players: Array[AudioStreamPlayer] = []
 var _audio_stream_paths: Dictionary[String, String] = {} # [id, path]
 var _unlocked_ids: Array[String]
-var _current_id = ""
+var _current_id := ""
 var _current_player: AudioStreamPlayer = null
 # TODO: configurable max players
-var _max_players = 10 # To stop an explosion of players when misusing SV Jukebox. Exceeding this will cause errors and incorrect behaviour though.
+var _max_players := 10 # To stop an explosion of players when misusing SV Jukebox. Exceeding this will cause errors and incorrect behaviour though.
+var _last_loop_count: int = 0
 
+## Emitted when the current track finishes playing. Note that this does not
+## include manually stopping or switching the track.
+##
+## This only emits for linear streams. For looping streams, connect to
+## [signal loop_complete]
+signal track_finished(id: String)
+## Emitted roughly when the current track gets to the end of a loop, each time it
+## gets to the end of a loop. Does not emit for linear streams. For linear streams,
+## connect to [signal track_finished] instead.
+signal loop_complete(id: String)
 ## Emitted when a track is unlocked.
 signal unlocked(id: String)
 ## Emitted when a track unlock is removed i.e. the reverse of [signal unlocked]
@@ -45,27 +58,39 @@ func _ready() -> void:
 		if resource == null or resource is not AlbumInfo:
 			push_error("Album at path %s does not appear to either exist or be a valid AlbumInfo resource. SV Jukebox will not be able to register any of its music." % album_path)
 		else:
-			var album: AlbumInfo = resource
-			for track in album.get_all_tracks():
+			_album = resource
+			for track in _album.get_all_tracks():
 				register(track.id, track.looping_stream_path if not track.looping_stream_path.is_empty() else track.linear_stream_path)
 	
 	_add_player()
 	_add_player()
 
 
+# Override
+func _process(delta: float) -> void:
+	if _current_player != null:
+		var playback := _current_player.get_stream_playback()
+		if playback != null:
+			var loop_count := playback.get_loop_count()
+			if loop_count > _last_loop_count:
+				loop_complete.emit(_current_id)
+			_last_loop_count = loop_count
+
+
+## Returns the album that was loaded at start. Note that modifying this will
+## not have any impact on the ids that are available to play. To add new music
+## use [method register] instead.
+func get_album() -> AlbumInfo:
+	return _album
+
+
 ## Play the music track with given ID
-func play(id: String, transition: TransitionType = TransitionType.INSTANT, transition_duration_secs: float = 1.0, unlock_track := true) -> void:
+func play(id: String, from_position: float = 0.0, transition: TransitionType = TransitionType.INSTANT, transition_duration_secs: float = 1.0, unlock_track := true) -> void:
 	if id == _current_id:
 		return
 	
 	if unlock_track:
 		unlock(id)
-	
-	var free_player := _get_free_player()
-	
-	if free_player == null:
-		push_error("SV Jukebox could not get a free player. Requested music with ID %s will not play." % id)
-		return
 	
 	var path = _audio_stream_paths.get(id)
 	if path == null:
@@ -76,6 +101,24 @@ func play(id: String, transition: TransitionType = TransitionType.INSTANT, trans
 	if stream == null or stream is not AudioStream:
 		push_error("SV Jukebox couldn't load the AudioStream, or it was a different kind of resource. Requested music with ID %s will not play." % id)
 		return
+	
+	if not play_stream(stream, from_position, transition, transition_duration_secs):
+		return
+	
+	_current_id = id
+
+
+# TODO: play_no_unlock method so that you don't have to pass every other argument.
+
+
+## Plays the given [AudioStream]. Similar to [method play], but allows you to
+## play unregistered tracks. Returns true if successful.
+func play_stream(stream: AudioStream, from_position: float = 0.0, transition: TransitionType = TransitionType.INSTANT, transition_duration_secs: float = 1.0) -> bool:
+	var free_player := _get_free_player()
+	
+	if free_player == null:
+		push_error("SV Jukebox could not get a free player. Requested music will not play.")
+		return false
 	
 	free_player.stream =  stream
 	
@@ -88,29 +131,31 @@ func play(id: String, transition: TransitionType = TransitionType.INSTANT, trans
 			if out_player != null:
 				out_player.stop()
 				out_player.stream = null
-			in_player.play()
+			in_player.play(from_position)
 		TransitionType.FADE_OUT:
 			in_player.volume_linear = 1.0
 			var tween: Tween = get_tree().create_tween()
-			if out_player != null:
+			if out_player != null and not out_player.stream_paused:
 				tween.tween_property(out_player, "volume_linear", 0.0, transition_duration_secs)
+			if out_player != null:
 				tween.tween_callback(func () -> void: out_player.stop())
 				tween.tween_callback(func () -> void: out_player.stream = null)
-			tween.tween_callback(func () -> void: in_player.play())
+			tween.tween_callback(func () -> void: in_player.play(from_position))
 			tween.play()
 		TransitionType.FADE_OUT_IN:
 			in_player.volume_linear = 0.0
 			var tween: Tween = get_tree().create_tween()
-			if out_player != null:
+			if out_player != null and not out_player.stream_paused:
 				tween.tween_property(out_player, "volume_linear", 0.0, transition_duration_secs / 2)
+			if out_player != null:
 				tween.tween_callback(func () -> void: out_player.stop())
 				tween.tween_callback(func () -> void: out_player.stream = null)
-			tween.tween_callback(func () -> void: in_player.play())
+			tween.tween_callback(func () -> void: in_player.play(from_position))
 			tween.tween_property(in_player, "volume_linear", 1.0, transition_duration_secs / 2)
 			tween.play()
 		TransitionType.CROSS_FADE:
 			in_player.volume_linear = 0.0
-			in_player.play()
+			in_player.play(from_position)
 			var tween: Tween = get_tree().create_tween()
 			tween.set_parallel(true)
 			if out_player != null:
@@ -123,14 +168,13 @@ func play(id: String, transition: TransitionType = TransitionType.INSTANT, trans
 			tween.play()
 	
 	_current_player = free_player
-	_current_id = id
-
-
-# TODO: play_no_unlock method so that you don't have to pass every other argument.
+	_current_id = ""
+	
+	return true
 
 
 ## Stop playing the current track.
-func stop(transition: TransitionType, transition_duration_secs: float = 1.0) -> void:
+func stop(transition: TransitionType = TransitionType.INSTANT, transition_duration_secs: float = 1.0) -> void:
 	if _current_player == null:
 		return
 	
@@ -140,20 +184,106 @@ func stop(transition: TransitionType, transition_duration_secs: float = 1.0) -> 
 			_current_player.stream = null
 		TransitionType.FADE_OUT, TransitionType.CROSS_FADE:
 			var tween: Tween = get_tree().create_tween()
-			tween.tween_property(_current_player, "volume_linear", 0.0, transition_duration_secs)
+			if not _current_player.stream_paused:
+				tween.tween_property(_current_player, "volume_linear", 0.0, transition_duration_secs)
 			tween.tween_callback(func () -> void: _current_player.stop())
 			tween.tween_callback(func () -> void: _current_player.stream = null)
 			tween.play()
 		TransitionType.FADE_OUT_IN:
 			# Half-duration to match behaviour of playing a new track.
 			var tween: Tween = get_tree().create_tween()
-			tween.tween_property(_current_player, "volume_linear", 0.0, transition_duration_secs / 2)
+			if not _current_player.stream_paused:
+				tween.tween_property(_current_player, "volume_linear", 0.0, transition_duration_secs / 2)
 			tween.tween_callback(func () -> void: _current_player.stop())
 			tween.tween_callback(func () -> void: _current_player.stream = null)
 			tween.play()
 	
 	_current_id = ""
 	_current_player = null
+
+
+## Pauses the currently playing track so it can be resumed later with [method resume].
+func pause(transition: TransitionType = TransitionType.INSTANT, transition_duration_secs: float = 1.0) -> void:
+	if _current_player == null:
+		return
+	
+	if _current_player.stream_paused:
+		return
+	
+	match transition:
+		TransitionType.INSTANT:
+			_current_player.stream_paused = true
+		TransitionType.FADE_OUT, TransitionType.CROSS_FADE:
+			var tween: Tween = get_tree().create_tween()
+			tween.tween_property(_current_player, "volume_linear", 0.0, transition_duration_secs)
+			tween.tween_callback(func () -> void: _current_player.stream_paused = true)
+			tween.tween_callback(func () -> void: _current_player.stream = null)
+			tween.play()
+		TransitionType.FADE_OUT_IN:
+			# Half-duration to match behaviour of playing a new track.
+			var tween: Tween = get_tree().create_tween()
+			tween.tween_property(_current_player, "volume_linear", 0.0, transition_duration_secs / 2)
+			tween.tween_callback(func () -> void: _current_player.stream_paused = true)
+			tween.play()
+
+
+## Seeks to the given position for the currently playing track.
+func seek(to_position: float) -> void:
+	if _current_player == null:
+		return
+	
+	# TODO: should it be possible to do a transition for this? Wouldn't be dependent on implementing
+	# force_play() for playing tracks with same id, because we would just use play_stream() to support
+	# tracks started with both play() and play_stream(). But you would need a way to do play_stream()
+	# while preserving _current_id.
+	_current_player.seek(to_position)
+
+
+## Attempts to seamlessly swap the currently playing audio stream with another
+## stream and keep playing from the same position. Provided so that
+## [SVJukeboxUIController] can switch from linear to looping versions of
+## tracks when looping is enabled.
+##
+## If the position is out of bounds of the new stream, the new stream will play
+## from the current position minus the length of the new stream.
+##
+## Pass in [param position_offset] if the two streams you are transitioning
+## between aren't perfectly aligned. The offset will be added to the new
+## position, and wrapping will apply according to the length of the new stream.
+## The offset can be negative.
+func swap_stream(new_stream: AudioStream, position_offset: float = 0.0) -> void:
+	if _current_player == null:
+		return
+	
+	var was_paused = _current_player.stream_paused
+	
+	var current_position = _current_player.get_playback_position()
+	var new_position = current_position
+	new_position += position_offset
+	if new_position > new_stream.get_length():
+		new_position = new_position - new_stream.get_length()
+	elif new_position < 0.0:
+		new_position = new_stream.get_length() + new_position
+	
+	_current_player.stop()
+	_current_player.stream = new_stream
+	_current_player.play(new_position)
+	
+	if was_paused:
+		_current_player.stream_paused = true
+
+
+## Get the position of the currently playing track. Equivalent to calling
+## [method AudioStreamPlayer.get_playback_position] on an [AudioStreamPlayer],
+## but with all details of the players abstracted away as with the rest of this
+## class.
+##
+## Returns 0.0 if no track is playing/paused.
+func get_position() -> float:
+	if _current_player == null:
+		return 0.0
+	
+	return _current_player.get_playback_position()
 
 
 ## Unlock the given music track (i.e. allow it to be played in the jukebox UI)
@@ -240,9 +370,10 @@ func _on_audio_stream_player_finished(player: AudioStreamPlayer) -> void:
 	# short linear tracks, but I think doing nothing would still be the correct
 	# action in that circumstance.
 	if _current_player == player:
+		track_finished.emit(_current_id)
 		_current_player.stream = null
 		_current_player = null
-		_current_id = null
+		_current_id = ""
 
 
 # Override
