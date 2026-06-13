@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 67.733332 67.733333"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   sodipodi:docname="loop-one.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#000000"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="51.795572"
+     inkscape:cy="124.62757"
+     inkscape:window-width="2194"
+     inkscape:window-height="1162"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1">
+    <inkscape:grid
+       id="grid1"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="4.2333333"
+       spacingy="4.2333333"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="4"
+       enabled="true"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect6"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,16.933333,0,1 @ F,0,0,1,0,16.933333,0,1 @ F,0,0,1,0,16.933333,0,1 @ F,0,0,1,0,16.933333,0,1"
+       radius="64"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect5"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,4.2333333,0,1 @ F,0,0,1,0,4.2333333,0,1 @ F,0,0,1,0,4.2333333,0,1 @ F,0,0,1,0,4.2333333,0,1"
+       radius="16"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect4"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,4.2333333,0,1 @ F,0,0,1,0,4.2333333,0,1 @ F,0,0,1,0,4.2333333,0,1 @ F,0,0,1,0,4.2333333,0,1"
+       radius="16"
+       unit="px"
+       method="auto"
+       mode="F"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+    <inkscape:path-effect
+       effect="powermask"
+       id="path-effect3"
+       is_visible="true"
+       lpeversion="1"
+       uri="#mask-powermask-path-effect2"
+       invert="false"
+       hide_mask="false"
+       background="true"
+       background_color="#ffffffff" />
+    <inkscape:path-effect
+       effect="powermask"
+       id="path-effect2"
+       is_visible="true"
+       lpeversion="1"
+       uri="#mask-powermask-path-effect2"
+       invert="false"
+       hide_mask="false"
+       background="true"
+       background_color="#ffffffff" />
+    <inkscape:path-effect
+       effect="powermask"
+       id="path-effect11"
+       is_visible="true"
+       lpeversion="1"
+       uri="#mask-powermask-path-effect11"
+       invert="false"
+       hide_mask="false"
+       background="true"
+       background_color="#ffffffff" />
+    <mask
+       maskUnits="userSpaceOnUse"
+       id="mask-powermask-path-effect3">
+      <path
+         id="path2"
+         mask="none"
+         style="fill:#000000;stroke-width:0.264583"
+         d="M 12.698966,4.9883261 4.9883261,12.698966 26.155509,33.866151 4.9883261,55.033333 12.698966,62.743974 33.866151,41.576789 55.033333,62.743974 62.743974,55.033333 41.576789,33.866151 62.743974,12.698966 55.033333,4.9883261 33.866151,26.155509 Z" />
+    </mask>
+    <mask
+       maskUnits="userSpaceOnUse"
+       id="mask-powermask-path-effect2">
+      <path
+         id="path3"
+         mask="none"
+         style="fill:#000000;stroke-width:0.264583"
+         d="M 12.698966,4.9883261 4.9883261,12.698966 26.155509,33.866151 4.9883261,55.033333 12.698966,62.743974 33.866151,41.576789 55.033333,62.743974 62.743974,55.033333 41.576789,33.866151 62.743974,12.698966 55.033333,4.9883261 33.866151,26.155509 Z" />
+    </mask>
+  </defs>
+  <path
+     id="rect6"
+     style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#ffffff;enable-background:accumulate;stop-color:#000000"
+     d="M 26.126571 4.264856 L 26.126571 11.6427 L 25.39845 11.6427 C 14.330531 11.6427 5.2916667 20.682081 5.2916667 31.75 L 5.2916667 35.9823 C 5.2916667 37.939096 5.5740439 39.832473 6.1004028 41.623816 L 11.878345 38.558887 C 11.722329 37.724919 11.640633 36.863652 11.640633 35.9823 L 11.640633 31.75 C 11.640633 24.113876 17.762326 17.992183 25.39845 17.992183 L 26.126571 17.992183 L 26.126571 25.4 L 36.693884 14.833203 L 26.126571 4.264856 z M 43.059904 11.655619 L 43.059904 18.010787 C 50.353474 18.385273 56.090116 24.358097 56.090116 31.75 L 56.090116 35.9823 C 56.090116 43.37403 50.353261 49.348716 43.059904 49.72358 L 43.059904 42.333333 L 32.49259 52.90013 L 43.059904 63.468477 L 43.059904 56.078748 C 53.793405 55.692526 62.441667 46.806418 62.441667 35.9823 L 62.441667 31.75 C 62.441667 20.925709 53.793621 12.041493 43.059904 11.655619 z " />
+  <path
+     id="path1"
+     style="baseline-shift:baseline;display:inline;overflow:visible;opacity:1;vector-effect:none;fill:#ffffff;enable-background:accumulate;stop-color:#000000;stop-opacity:1"
+     d="m 19.050515,39.896273 -6.712768,3.830257 2.83962,5.679757 3.873148,-2.287107 v 15.321846 l 6.349484,-1.89e-4 V 39.896272 Z"
+     sodipodi:nodetypes="cccccccc" />
+</svg>
