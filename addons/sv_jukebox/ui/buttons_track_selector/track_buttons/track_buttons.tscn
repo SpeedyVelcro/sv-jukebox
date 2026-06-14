@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://c7vxu67owmjsw"]
+
+[ext_resource type="Script" uid="uid://i4l0lq1rfn25" path="res://addons/sv_jukebox/ui/buttons_track_selector/track_buttons/track_buttons.gd" id="1_fhdx2"]
+[ext_resource type="Texture2D" uid="uid://d2xutkktvdii4" path="res://addons/sv_jukebox/icon/play.svg" id="2_lqr30"]
+[ext_resource type="Script" uid="uid://bddwxch1cpat" path="res://addons/sv_jukebox/fix/aspect_ratio_container.gd" id="2_uaow6"]
+[ext_resource type="Texture2D" uid="uid://cgmqbr1ekou1x" path="res://addons/sv_jukebox/icon/loop.svg" id="3_uaow6"]
+
+[node name="TrackButtons" type="HBoxContainer" unique_id=8384480]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -896.0
+offset_bottom = -616.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fhdx2")
+play_button_icon = ExtResource("2_lqr30")
+loop_button_icon = ExtResource("3_uaow6")
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="." unique_id=1141330167]
+layout_mode = 2
+stretch_mode = 1
+alignment_horizontal = 0
+script = ExtResource("2_uaow6")
+metadata/_custom_type_script = "uid://bddwxch1cpat"
+
+[node name="PlayButton" type="Button" parent="AspectRatioContainer" unique_id=1635929613]
+layout_mode = 2
+icon = ExtResource("2_lqr30")
+expand_icon = true
+
+[node name="AspectRatioContainer2" type="AspectRatioContainer" parent="." unique_id=1048428868]
+layout_mode = 2
+stretch_mode = 1
+alignment_horizontal = 0
+script = ExtResource("2_uaow6")
+metadata/_custom_type_script = "uid://bddwxch1cpat"
+
+[node name="LoopButton" type="Button" parent="AspectRatioContainer2" unique_id=1323330603]
+layout_mode = 2
+icon = ExtResource("3_uaow6")
+expand_icon = true
+
+[node name="TrackButton" type="Button" parent="." unique_id=1176399932]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "1. Track Name"
+alignment = 0
+
+[node name="DoubleClickTimer" type="Timer" parent="." unique_id=2045054715]
+one_shot = true
+ignore_time_scale = true
+
+[connection signal="pressed" from="AspectRatioContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="AspectRatioContainer2/LoopButton" to="." method="_on_loop_button_pressed"]
+[connection signal="pressed" from="TrackButton" to="." method="_on_track_button_pressed"]
+[connection signal="timeout" from="DoubleClickTimer" to="." method="_on_double_click_timer_timeout"]
