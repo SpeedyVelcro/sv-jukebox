@@ -74,6 +74,28 @@ func get_track_info(id: String, show_errors := true) -> TrackInfo:
 	return track_info
 
 
+## Get the track number of the given track id. The track number is counted starting
+## from [code]1[/code] at the beginning of its disc, or the beginning of the side for two-sided
+## discs.
+##
+## Returns [code]-1[/code] if the track isn't present on this disc and pushes
+## an error. You can optionally pass an argument to suppress errors.
+func get_track_number_of(id: String, show_error := true) -> int:
+	var number: int = -1
+	
+	for disc in discs:
+		const SHOW_DISC_ERROR := false # We will do an error at the top level anyway if show_error is true.
+		number = disc.get_track_number_of(id, SHOW_DISC_ERROR)
+		
+		if number >= 0:
+			break
+	
+	if show_error and (number < 0):
+		push_error("Could not find track with id %s on album." % id)
+	
+	return number
+
+
 ## Returns true if this album has the track with given id. Does not include
 ## hidden tracks.
 func has_track(id: String) -> bool:

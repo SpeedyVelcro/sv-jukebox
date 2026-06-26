@@ -1,9 +1,15 @@
 [gd_scene format=3 uid="uid://ctwlw4jbbvssn"]
 
-[node name="SVJukeboxButtonsTrackSelector" type="Control" unique_id=974302326]
-layout_mode = 3
+[ext_resource type="Script" uid="uid://7kr76e585dkh" path="res://addons/sv_jukebox/ui/buttons_track_selector/buttons_track_selector.gd" id="1_nho6l"]
+[ext_resource type="Texture2D" uid="uid://d2xutkktvdii4" path="res://addons/sv_jukebox/icon/play.svg" id="2_raaqe"]
+[ext_resource type="Texture2D" uid="uid://cgmqbr1ekou1x" path="res://addons/sv_jukebox/icon/loop.svg" id="3_b00x1"]
+
+[node name="SVJukeboxButtonsTrackSelector" type="VBoxContainer" unique_id=2058736376]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_nho6l")
+play_button_icon = ExtResource("2_raaqe")
+loop_button_icon = ExtResource("3_b00x1")

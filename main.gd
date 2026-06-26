@@ -28,3 +28,13 @@ func _on_play_petra_button_pressed() -> void:
 
 func _on_unlock_petra_button_pressed() -> void:
 	SVJukebox.unlock("petra")
+
+
+func _on_to_jukebox_button_pressed() -> void:
+	$Control/SimControl.visible = false
+	$Control/JukeboxControl.visible = true
+
+
+func _on_jukebox_back_button_pressed() -> void:
+	$Control/SimControl.visible = true
+	$Control/JukeboxControl.visible = false

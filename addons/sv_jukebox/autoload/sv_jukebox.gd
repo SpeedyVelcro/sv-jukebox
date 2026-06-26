@@ -84,7 +84,8 @@ func get_album() -> AlbumInfo:
 	return _album
 
 
-## Play the music track with given ID
+## Play the music track with given ID. This will play the track's looping stream,
+## falling back on its linear stream if the looping stream is undefined.
 func play(id: String, from_position: float = 0.0, transition: TransitionType = TransitionType.INSTANT, transition_duration_secs: float = 1.0, unlock_track := true) -> void:
 	if id == _current_id:
 		return
@@ -101,11 +102,6 @@ func play(id: String, from_position: float = 0.0, transition: TransitionType = T
 	if stream == null or stream is not AudioStream:
 		push_error("SV Jukebox couldn't load the AudioStream, or it was a different kind of resource. Requested music with ID %s will not play." % id)
 		return
-	
-	if not play_stream(stream, from_position, transition, transition_duration_secs):
-		return
-	
-	_current_id = id
 
 
 # TODO: play_no_unlock method so that you don't have to pass every other argument.
@@ -113,7 +109,7 @@ func play(id: String, from_position: float = 0.0, transition: TransitionType = T
 
 ## Plays the given [AudioStream]. Similar to [method play], but allows you to
 ## play unregistered tracks. Returns true if successful.
-func play_stream(stream: AudioStream, from_position: float = 0.0, transition: TransitionType = TransitionType.INSTANT, transition_duration_secs: float = 1.0) -> bool:
+func play_stream(stream: AudioStream, as_id: String, from_position: float = 0.0, transition: TransitionType = TransitionType.INSTANT, transition_duration_secs: float = 1.0) -> bool:
 	var free_player := _get_free_player()
 	
 	if free_player == null:
@@ -168,7 +164,7 @@ func play_stream(stream: AudioStream, from_position: float = 0.0, transition: Tr
 			tween.play()
 	
 	_current_player = free_player
-	_current_id = ""
+	_current_id = as_id
 	
 	return true
 
@@ -366,14 +362,13 @@ func _disconnect_signals() -> void:
 
 # Signal connection
 func _on_audio_stream_player_finished(player: AudioStreamPlayer) -> void:
-	# Only way this wouldn't be true is if you're rapidly switching between
-	# short linear tracks, but I think doing nothing would still be the correct
-	# action in that circumstance.
 	if _current_player == player:
-		track_finished.emit(_current_id)
+		# TODO: Add a force loop variable and check it here.
+		var finished_id := _current_id
 		_current_player.stream = null
 		_current_player = null
 		_current_id = ""
+		track_finished.emit(finished_id)
 
 
 # Override

@@ -29,7 +29,7 @@ extends HBoxContainer
 		number_track_name = value
 		_update_track_button_text()
 	get:
-		return track_number
+		return number_track_name
 ## Format to use for the number if [member number_track_name] is [code]true[/code]. This
 ## should include the space separating it from the track name assuming you want
 ## one.

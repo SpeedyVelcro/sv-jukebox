@@ -16,11 +16,9 @@ enum LoopBehavior {
 	LOOP_ONE
 }
 
+# TODO: rename album to album_override, as it would be a more accurate name
 ## Album to play and navigate using this controller. If this is set to null, the
 ## album loaded by the SVJukebox autoload on game start will be used instead.
-##
-## All tracks on this album should be registered with the SVJukebox autoload
-## or they will not be able to play.
 @export var album : AlbumInfo = null
 
 ## Emitted when a track is selected or deselected with [method select_track]. [param track]
@@ -48,6 +46,10 @@ var _shuffle := false
 var _queued_tracks: Array[String]
 var _stream_is_linear = false
 
+
+# Override
+func _ready() -> void:
+	_connect_jukebox_signals()
 
 
 ## Get the [TrackInfo] of the currently selected track. Returns null and
@@ -101,8 +103,8 @@ func deselect_track() -> void:
 
 ## Play the given track. By default, the track will also be selected. Pass in
 ## [param select] to change this behavior.
-func play_track(id: String, select := true) -> void:
-	if _playing_track_id == id:
+func play_track(id: String, select := true, queue_following := true, force := false) -> void:
+	if _playing_track_id == id and not force:
 		return
 	
 	var tracks: Array[TrackInfo] = get_album().get_tracks_from(id)
@@ -112,35 +114,36 @@ func play_track(id: String, select := true) -> void:
 	
 	var track := tracks.pop_front()
 	
-	var stream_path: String = ""
-	var using_linear: bool
-	if track.looping_stream_path.is_empty() or _loop != LoopBehavior.LOOP_ONE:
-		stream_path = track.linear_stream_path
-		using_linear = true
-	elif track.linear_stream_path.is_empty() or _loop == LoopBehavior.LOOP_ONE:
-		stream_path = track.looping_stream_path
-		using_linear = false
+	var use_linear: bool = false
+	if track.looping_stream_path.is_empty():
+		use_linear = true
+	if _loop != LoopBehavior.LOOP_ONE and not track.linear_stream_path.is_empty():
+		use_linear = true
+	
+	var stream_path: String = track.linear_stream_path if use_linear else track.looping_stream_path
 	if stream_path == "":
 		push_error("Track with id %s does not have any streams set, so UI controller cannot play it." % id)
 		return
-	var stream_untyped = load(track.linear_stream_path)
+	
+	var stream_untyped = load(stream_path)
 	if stream_untyped == null or stream_untyped is not AudioStream:
 		push_error("Failed to load audio stream of track with id %s at path %s." % [id, stream_path])
 		return
 	var stream: AudioStream = stream_untyped
 	
-	if not SVJukebox.play_stream(stream): # TODO: Transitions are configurable with export variables
+	if not SVJukebox.play_stream(stream, id): # TODO: Transitions are configurable with export variables
 		push_error("Failed to play audio stream.")
 		return
 	
 	_playing_track_id = id
-	_stream_is_linear = using_linear
+	_stream_is_linear = use_linear
 	if select:
 		select_track(id)
 	
-	_queued_tracks = tracks.map(func (t): return t.id)
-	if _shuffle:
-		_queued_tracks.shuffle()
+	if queue_following:
+		_queued_tracks.assign(tracks.map(func (t) -> String: return t.id))
+		if _shuffle:
+			_queued_tracks.shuffle()
 
 
 ## Pause playback if currently playing a track.
@@ -266,3 +269,74 @@ func _swap_to_looping_stream_if_available() -> void:
 	
 	SVJukebox.swap_stream(stream) # TODO: add offset property to TrackInfo and use it here as optional argument
 	_stream_is_linear = false
+
+
+# Signal connection
+func _on_sv_jukebox_loop_complete(id: String) -> void:
+	if id.is_empty() or id != _playing_track_id:
+		return
+	
+	match _loop:
+		LoopBehavior.NONE:
+			if _queued_tracks.is_empty():
+				# TODO: configurable transition
+				const KEEP_SELECTION := true
+				stop(KEEP_SELECTION)
+			else:
+				var next := _queued_tracks.pop_front()
+				const SELECT := false
+				const QUEUE_FOLLOWING := false
+				play_track(next, SELECT, QUEUE_FOLLOWING)
+		LoopBehavior.LOOP:
+			if _queued_tracks.is_empty():
+				const INCLUDE_HIDDEN := false
+				_queued_tracks.assign(album.get_all_tracks(INCLUDE_HIDDEN).map(func(t): return t.id))
+			var next := _queued_tracks.pop_front()
+			const SELECT := false
+			const QUEUE_FOLLOWING := false
+			play_track(next, SELECT, QUEUE_FOLLOWING)
+		LoopBehavior.LOOP_ONE:
+			pass # No action necessary; track is already looping.
+
+
+# Signal connection
+func _on_sv_jukebox_track_finished(id: String) -> void:
+	if id.is_empty() or id != _playing_track_id:
+		return
+	
+	match _loop:
+		LoopBehavior.NONE:
+			_playing_track_id = ""
+			if not _queued_tracks.is_empty():
+				var next := _queued_tracks.pop_front()
+				const SELECT := false
+				const QUEUE_FOLLOWING := false
+				play_track(next, SELECT, QUEUE_FOLLOWING)
+		LoopBehavior.LOOP:
+			if _queued_tracks.is_empty():
+				const INCLUDE_HIDDEN := false
+				_queued_tracks.assign(album.get_all_tracks(INCLUDE_HIDDEN).map(func(t): return t.id))
+			var next := _queued_tracks.pop_front()
+			const SELECT := false
+			const QUEUE_FOLLOWING := false
+			play_track(next, SELECT, QUEUE_FOLLOWING)
+		LoopBehavior.LOOP_ONE:
+			const SELECT := false
+			const QUEUE_FOLLOWING := false
+			const FORCE := true # Needs to be forced as ID is same
+			play_track(_playing_track_id, SELECT, QUEUE_FOLLOWING, FORCE)
+
+
+func _connect_jukebox_signals() -> void:
+	SVJukebox.loop_complete.connect(_on_sv_jukebox_loop_complete)
+	SVJukebox.track_finished.connect(_on_sv_jukebox_track_finished)
+
+
+func _disconnect_jukebox_signals() -> void:
+	SVJukebox.loop_complete.disconnect(_on_sv_jukebox_loop_complete)
+	SVJukebox.track_finished.disconnect(_on_sv_jukebox_track_finished)
+
+
+# Override
+func _exit_tree() -> void:
+	_disconnect_jukebox_signals()

@@ -1,7 +1,7 @@
 class_name AspectRatioContainerJukeboxFix
 extends AspectRatioContainer
 # See https://github.com/godotengine/godot/issues/75169
-# NB: This workaround prevents overwrites any custom_minimum_size so does not
+# NB: This workaround overwrites any custom_minimum_size so does not
 # work as a general solution; only for our use case in SV Jukebox.
 
 
