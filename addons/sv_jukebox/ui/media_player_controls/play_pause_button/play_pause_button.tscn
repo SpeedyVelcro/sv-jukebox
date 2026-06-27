@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://fffb5jwgl5hm"]
+
+[ext_resource type="Texture2D" uid="uid://d2xutkktvdii4" path="res://addons/sv_jukebox/icon/play.svg" id="1_midnu"]
+[ext_resource type="Script" uid="uid://urtsm5sgddhn" path="res://addons/sv_jukebox/ui/media_player_controls/play_pause_button/play_pause_button.gd" id="2_fyxsa"]
+[ext_resource type="Texture2D" uid="uid://drjw2btceo2eh" path="res://addons/sv_jukebox/icon/pause.svg" id="3_fyxsa"]
+
+[node name="PlayPauseButton" type="Button" unique_id=1162309528]
+custom_minimum_size = Vector2(48, 48)
+icon = ExtResource("1_midnu")
+expand_icon = true
+script = ExtResource("2_fyxsa")
+play_icon = ExtResource("1_midnu")
+pause_icon = ExtResource("3_fyxsa")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

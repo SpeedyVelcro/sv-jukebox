@@ -213,13 +213,38 @@ func pause(transition: TransitionType = TransitionType.INSTANT, transition_durat
 			var tween: Tween = get_tree().create_tween()
 			tween.tween_property(_current_player, "volume_linear", 0.0, transition_duration_secs)
 			tween.tween_callback(func () -> void: _current_player.stream_paused = true)
-			tween.tween_callback(func () -> void: _current_player.stream = null)
 			tween.play()
 		TransitionType.FADE_OUT_IN:
 			# Half-duration to match behaviour of playing a new track.
 			var tween: Tween = get_tree().create_tween()
 			tween.tween_property(_current_player, "volume_linear", 0.0, transition_duration_secs / 2)
 			tween.tween_callback(func () -> void: _current_player.stream_paused = true)
+			tween.play()
+
+
+## Resumes playback if it was previously paused using [method pause].
+func resume(transition: TransitionType = TransitionType.INSTANT, transition_duration_secs: float = 1.0) -> void:
+	if _current_player == null:
+		return
+	
+	if not _current_player.stream_paused:
+		return
+	
+	match transition:
+		TransitionType.INSTANT, TransitionType.FADE_OUT:
+			_current_player.stream_paused = false
+		TransitionType.CROSS_FADE:
+			_current_player.stream_paused = false
+			var tween: Tween = get_tree().create_tween()
+			tween.tween_property(_current_player, "volume_linear", 1.0, transition_duration_secs)
+			tween.tween_callback(func () -> void: _current_player.stream_paused = false) # Force unpause in case of overlap with pausing tween
+			tween.play()
+		TransitionType.FADE_OUT_IN:
+			# Half-duration to match behaviour of playing a new track.
+			_current_player.stream_paused = false
+			var tween: Tween = get_tree().create_tween()
+			tween.tween_property(_current_player, "volume_linear", 1.0, transition_duration_secs / 2)
+			tween.tween_callback(func () -> void: _current_player.stream_paused = false) # Force unpause in case of overlap with pausing tween
 			tween.play()
 
 

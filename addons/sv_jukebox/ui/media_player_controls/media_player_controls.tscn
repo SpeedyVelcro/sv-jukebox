@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cgnlb85whisev"]
+
+[ext_resource type="Script" uid="uid://bs07qibjmt164" path="res://addons/sv_jukebox/ui/media_player_controls/media_player_controls.gd" id="1_8rtc8"]
+[ext_resource type="PackedScene" uid="uid://fffb5jwgl5hm" path="res://addons/sv_jukebox/ui/media_player_controls/play_pause_button/play_pause_button.tscn" id="1_51pkj"]
+[ext_resource type="Texture2D" uid="uid://d2xutkktvdii4" path="res://addons/sv_jukebox/icon/play.svg" id="2_ll77x"]
+[ext_resource type="Texture2D" uid="uid://drjw2btceo2eh" path="res://addons/sv_jukebox/icon/pause.svg" id="3_vw4ta"]
+
+[node name="MediaPlayerControls" type="HBoxContainer" unique_id=187863056]
+alignment = 1
+script = ExtResource("1_8rtc8")
+play_icon = ExtResource("2_ll77x")
+pause_icon = ExtResource("3_vw4ta")
+
+[node name="PlayPauseButton" parent="." unique_id=1162309528 instance=ExtResource("1_51pkj")]
+layout_mode = 2

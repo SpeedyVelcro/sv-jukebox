@@ -21,6 +21,8 @@ enum LoopBehavior {
 ## album loaded by the SVJukebox autoload on game start will be used instead.
 @export var album : AlbumInfo = null
 
+## Emitted when a track is being played with [method play_track].
+signal playing_track(track: TrackInfo)
 ## Emitted when a track is selected or deselected with [method select_track]. [param track]
 ## includes the track, and is null if a track was deselected.
 signal track_selected(track: TrackInfo)
@@ -38,6 +40,13 @@ signal loop_enabled
 signal loop_one_enabled
 ## Emitted when looping is disabled.
 signal loop_disabled
+## Emitted when pausing a track
+signal pausing
+## Emitted when resuming a previously paused track.
+signal resuming
+## Emitting when stopping playback, either with a [method stop] call, or because
+## a track has finished without looping set and no further tracks are queued.
+signal stopping
 
 var _selected_track_id := ""
 var _playing_track_id := ""
@@ -144,6 +153,8 @@ func play_track(id: String, select := true, queue_following := true, force := fa
 		_queued_tracks.assign(tracks.map(func (t) -> String: return t.id))
 		if _shuffle:
 			_queued_tracks.shuffle()
+	
+	playing_track.emit(track)
 
 
 ## Pause playback if currently playing a track.
@@ -152,6 +163,16 @@ func pause() -> void:
 		return
 	
 	SVJukebox.pause() # TODO: Transitions are configurable with export variables
+	pausing.emit()
+
+
+## Resume playback previously paused with [method pause].
+func resume() -> void:
+	if _playing_track_id.is_empty():
+		return
+	
+	SVJukebox.resume() # TODO: Transitions are configurable with export variables
+	resuming.emit()
 
 
 ## Stop playback of the current track and clear it as the "currently played"
@@ -163,6 +184,7 @@ func stop(keep_selection := true) -> void:
 		return
 	
 	SVJukebox.stop() # TODO: Transitions are configurable with export variables
+	stopping.emit()
 	
 	if not keep_selection:
 		deselect_track()
@@ -312,6 +334,8 @@ func _on_sv_jukebox_track_finished(id: String) -> void:
 				const SELECT := false
 				const QUEUE_FOLLOWING := false
 				play_track(next, SELECT, QUEUE_FOLLOWING)
+			else:
+				stopping.emit()
 		LoopBehavior.LOOP:
 			if _queued_tracks.is_empty():
 				const INCLUDE_HIDDEN := false
