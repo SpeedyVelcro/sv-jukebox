@@ -1,19 +1,8 @@
 extends Button
-## Play/Pause button for SV Jukebox.
+## Stop button for SV Jukebox
 ##
-## This button allows playing or pausing a currently playing track using
-## [SVJukeboxUIController].
-
-## The type of a play/pause button, as it can morph between a play and pause
-## button or disable based on the state of playback.
-enum ButtonType {
-	## Button is not usable.
-	DISABLED,
-	## Button will play the currently paused track.
-	PLAY,
-	## Button will pause the currently playing track.
-	PAUSE
-}
+## This button clears the currently playing or paused track using its
+## assigned [SVJukeboxUIController]
 
 ## Shared jukebox UI controller. Place an [SVJukeboxUIController] in your scene
 ## and assign it here.
@@ -25,47 +14,11 @@ enum ButtonType {
 	get():
 		return ui_controller
 
-## Icon to display when the button has "play" functionality, or by default when
-## the button is disabled.
-@export var play_icon: Texture2D:
-	set(value):
-		play_icon = value
-		_update_icon()
-	get:
-		return play_icon
-
-## Icon to display when the button has "pause" functionality.
-@export var pause_icon: Texture2D:
-	set(value):
-		pause_icon = value
-		_update_icon()
-	get:
-		return pause_icon
-
-## Currently type (i.e. whether it's a play button or a pause button or outright
-## disabled) of the button.
-var button_type: ButtonType:
-	set(value):
-		button_type = value
-		disabled = button_type == ButtonType.DISABLED
-		_update_icon()
-	get():
-		return button_type
-
 
 # Override
 func _ready() -> void:
-	button_type = ButtonType.DISABLED
+	disabled = true
 	_connect_controller_signals()
-	_update_icon()
-
-
-func _update_icon() -> void:
-	match button_type:
-		ButtonType.DISABLED, ButtonType.PLAY:
-			icon = play_icon
-		ButtonType.PAUSE:
-			icon = pause_icon
 
 
 # Signal connection
@@ -74,37 +27,31 @@ func _on_pressed() -> void:
 		push_error("UI controller not set on play/pause button.")
 		return
 	
-	# Looks at first glance like an identity crisis pattern but actually this
-	# button really does morph it's behavior constantly. Maybe "ButtonType" needs
-	# renaming, since it's not really a different button type but rather different
-	# functionality.
-	match button_type:
-		ButtonType.DISABLED:
-			pass # Do nothing
-		ButtonType.PLAY:
-			ui_controller.resume()
-		ButtonType.PAUSE:
-			ui_controller.pause()
+	ui_controller.stop()
 
 
 # Signal connection
 func _on_ui_controller_playing_track(track: TrackInfo) -> void:
-	button_type = ButtonType.PAUSE
+	disabled = false
 
 
 # Signal connection
 func _on_ui_controller_stopping() -> void:
-	button_type = ButtonType.DISABLED
+	disabled = true
 
 
 # Signal connection
 func _on_ui_controller_pausing() -> void:
-	button_type = ButtonType.PLAY
+	# Should already have been disabled when the track started playing, but doing
+	# it again just in case UI Controller was manipulated in a weird way doesn't hurt.
+	disabled = false
 
 
 # Signal connection
 func _on_ui_controller_resuming() -> void:
-	button_type = ButtonType.PAUSE
+	# Should already have been disabled when the track started playing, but doing
+	# it again just in case UI Controller was manipulated in a weird way doesn't hurt.
+	disabled = false
 
 
 func _connect_controller_signals() -> void:

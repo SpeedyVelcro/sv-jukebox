@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://co6p48jsig32n"]
+
+[ext_resource type="Texture2D" uid="uid://ldtuf1d1icp7" path="res://addons/sv_jukebox/icon/stop.svg" id="1_psvcf"]
+[ext_resource type="Script" uid="uid://bc2j2isjh5orl" path="res://addons/sv_jukebox/ui/media_player_controls/stop_button/stop_button.gd" id="2_oy8lu"]
+
+[node name="StopButton" type="Button" unique_id=1162309528]
+custom_minimum_size = Vector2(48, 48)
+icon = ExtResource("1_psvcf")
+expand_icon = true
+script = ExtResource("2_oy8lu")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

@@ -32,6 +32,7 @@ extends HBoxContainer
 		return pause_icon
 
 @onready var _play_pause_button: Control = $PlayPauseButton
+@onready var _stop_button: Control = $StopButton
 
 
 # Override
@@ -41,10 +42,12 @@ func _ready() -> void:
 
 
 func _update_ui_controller() -> void:
-	if _play_pause_button == null:
-		return
 	
-	_play_pause_button.ui_controller = ui_controller
+	if _play_pause_button != null:
+		_play_pause_button.ui_controller = ui_controller
+	
+	if _stop_button != null:
+		_stop_button.ui_controller = ui_controller
 
 
 func _update_icons() -> void:
