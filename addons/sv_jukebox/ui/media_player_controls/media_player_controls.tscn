@@ -5,15 +5,23 @@
 [ext_resource type="Texture2D" uid="uid://d2xutkktvdii4" path="res://addons/sv_jukebox/icon/play.svg" id="2_ll77x"]
 [ext_resource type="Texture2D" uid="uid://drjw2btceo2eh" path="res://addons/sv_jukebox/icon/pause.svg" id="3_vw4ta"]
 [ext_resource type="PackedScene" uid="uid://co6p48jsig32n" path="res://addons/sv_jukebox/ui/media_player_controls/stop_button/stop_button.tscn" id="4_vw4ta"]
+[ext_resource type="Texture2D" uid="uid://ldtuf1d1icp7" path="res://addons/sv_jukebox/icon/stop.svg" id="4_yssae"]
+[ext_resource type="Texture2D" uid="uid://bw882u3sw6vop" path="res://addons/sv_jukebox/icon/skip_forward.svg" id="5_q3lxt"]
+[ext_resource type="PackedScene" uid="uid://dtat6bi3rkij4" path="res://addons/sv_jukebox/ui/media_player_controls/skip_forward_button/skip_forward_button.tscn" id="6_o1y0g"]
 
 [node name="MediaPlayerControls" type="HBoxContainer" unique_id=187863056]
 alignment = 1
 script = ExtResource("1_8rtc8")
 play_icon = ExtResource("2_ll77x")
 pause_icon = ExtResource("3_vw4ta")
+stop_icon = ExtResource("4_yssae")
+skip_forward_icon = ExtResource("5_q3lxt")
 
 [node name="StopButton" parent="." unique_id=1162309528 instance=ExtResource("4_vw4ta")]
 layout_mode = 2
 
 [node name="PlayPauseButton" parent="." unique_id=1406065625 instance=ExtResource("1_51pkj")]
+layout_mode = 2
+
+[node name="SkipForwardButton" parent="." unique_id=182009163 instance=ExtResource("6_o1y0g")]
 layout_mode = 2

@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://dtat6bi3rkij4"]
+
+[ext_resource type="Texture2D" uid="uid://bw882u3sw6vop" path="res://addons/sv_jukebox/icon/skip_forward.svg" id="1_8085l"]
+[ext_resource type="Script" uid="uid://62aabw0thh61" path="res://addons/sv_jukebox/ui/media_player_controls/skip_forward_button/skip_forward_button.gd" id="2_8085l"]
+
+[node name="SkipForwardButton" type="Button" unique_id=1162309528]
+custom_minimum_size = Vector2(48, 48)
+icon = ExtResource("1_8085l")
+expand_icon = true
+script = ExtResource("2_8085l")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

@@ -110,6 +110,12 @@ func deselect_track() -> void:
 	select_track("")
 
 
+## Plays the entire album starting from the first track (or a random track if
+## shuffle is on).
+func play_album() -> void:
+	pass # TODO
+
+
 ## Play the given track. By default, the track will also be selected. Pass in
 ## [param select] to change this behavior.
 func play_track(id: String, select := true, queue_following := true, force := false) -> void:
@@ -190,6 +196,57 @@ func stop(keep_selection := true) -> void:
 		deselect_track()
 
 
+## Skips backwards to the beginning of the current track.
+func skip_to_track_beginning() -> void:
+	if _playing_track_id.is_empty():
+		return
+	
+	const SELECT := false
+	const QUEUE_FOLLOWING := false
+	const FORCE := true # Needs to be forced as ID might be the same in the case of loop one.
+	play_track(_playing_track_id, SELECT, QUEUE_FOLLOWING, FORCE)
+
+
+## If there were previously tracks queued before this one (or looping is enabled),
+## this method skips to the previous track. Otherwise does nothing.
+##
+## In the case of looping being set to loop one, the previous track is actually
+## the same track, so this skips to the beginning of the track instead as that
+## is functionally equivalent.
+func skip_to_previous_track() -> void:
+	if _playing_track_id.is_empty():
+		return
+	
+	if _loop == LoopBehavior.LOOP_ONE:
+		skip_to_track_beginning()
+	
+	pass # TODO
+
+
+## If a track is currently playing and there is something queued up (or looping is
+## enabled), this method skips to the next track. Otherwise does nothing.
+##
+## In the case of looping being set to loop one, the next track is actually
+## the same track, so this skips to the beginning of the track instead as that
+## is functionally equivalent.
+func skip_to_next_track() -> void:
+	if _playing_track_id.is_empty():
+		return
+	
+	if _loop == LoopBehavior.LOOP_ONE:
+		skip_to_track_beginning()
+	
+	if _queued_tracks.is_empty():
+		if _loop == LoopBehavior.LOOP:
+			play_album()
+		return
+	
+	var next := _queued_tracks.pop_front()
+	const SELECT := false
+	const QUEUE_FOLLOWING := false
+	play_track(next, SELECT, QUEUE_FOLLOWING)
+
+
 ## Sets looping behavior to the given [enum LoopBehavior]
 func set_loop_behavior(behavior: LoopBehavior) -> void:
 	if _loop == behavior:
@@ -228,7 +285,7 @@ func disable_loop() -> void:
 
 
 ## Turns shuffle on or off.
-func set_shuffle_behavior(shuffle: bool):
+func set_shuffle_behavior(shuffle: bool) -> void:
 	if shuffle == _shuffle:
 		return # Avoid pointlessly reshuffling, etc.
 	
@@ -249,8 +306,21 @@ func set_shuffle_behavior(shuffle: bool):
 		shuffle_disabled.emit()
 
 
+## Returns true if there is a track after the currently queued track; either
+## a literal next track or through looping. With looping set to loop one, this
+## is a little ambiguous as the next track is the same track, so you can specify
+## whether you want that to count as having a track queued with [param including_loop_one].
+func is_any_track_queued(including_loop_one := true) -> bool:
+	if _playing_track_id.is_empty():
+		return false
+	
+	return not _queued_tracks.is_empty() \
+			or _loop == LoopBehavior.LOOP \
+			or (including_loop_one and _loop == LoopBehavior.LOOP_ONE)
+
+
 func _swap_to_linear_stream_if_available() -> void:
-	if _playing_track_id == "":
+	if _playing_track_id.is_empty():
 		return
 	
 	if _stream_is_linear:
@@ -272,7 +342,7 @@ func _swap_to_linear_stream_if_available() -> void:
 
 
 func _swap_to_looping_stream_if_available() -> void:
-	if _playing_track_id == "":
+	if _playing_track_id.is_empty():
 		return
 	
 	if not _stream_is_linear:
@@ -302,21 +372,11 @@ func _on_sv_jukebox_loop_complete(id: String) -> void:
 		LoopBehavior.NONE:
 			if _queued_tracks.is_empty():
 				# TODO: configurable transition
-				const KEEP_SELECTION := true
-				stop(KEEP_SELECTION)
+				stop()
 			else:
-				var next := _queued_tracks.pop_front()
-				const SELECT := false
-				const QUEUE_FOLLOWING := false
-				play_track(next, SELECT, QUEUE_FOLLOWING)
+				skip_to_next_track()
 		LoopBehavior.LOOP:
-			if _queued_tracks.is_empty():
-				const INCLUDE_HIDDEN := false
-				_queued_tracks.assign(album.get_all_tracks(INCLUDE_HIDDEN).map(func(t): return t.id))
-			var next := _queued_tracks.pop_front()
-			const SELECT := false
-			const QUEUE_FOLLOWING := false
-			play_track(next, SELECT, QUEUE_FOLLOWING)
+			skip_to_next_track()
 		LoopBehavior.LOOP_ONE:
 			pass # No action necessary; track is already looping.
 
@@ -330,25 +390,11 @@ func _on_sv_jukebox_track_finished(id: String) -> void:
 		LoopBehavior.NONE:
 			_playing_track_id = ""
 			if not _queued_tracks.is_empty():
-				var next := _queued_tracks.pop_front()
-				const SELECT := false
-				const QUEUE_FOLLOWING := false
-				play_track(next, SELECT, QUEUE_FOLLOWING)
+				skip_to_next_track()
 			else:
 				stopping.emit()
-		LoopBehavior.LOOP:
-			if _queued_tracks.is_empty():
-				const INCLUDE_HIDDEN := false
-				_queued_tracks.assign(album.get_all_tracks(INCLUDE_HIDDEN).map(func(t): return t.id))
-			var next := _queued_tracks.pop_front()
-			const SELECT := false
-			const QUEUE_FOLLOWING := false
-			play_track(next, SELECT, QUEUE_FOLLOWING)
-		LoopBehavior.LOOP_ONE:
-			const SELECT := false
-			const QUEUE_FOLLOWING := false
-			const FORCE := true # Needs to be forced as ID is same
-			play_track(_playing_track_id, SELECT, QUEUE_FOLLOWING, FORCE)
+		LoopBehavior.LOOP, LoopBehavior.LOOP_ONE:
+			skip_to_next_track()
 
 
 func _connect_jukebox_signals() -> void:

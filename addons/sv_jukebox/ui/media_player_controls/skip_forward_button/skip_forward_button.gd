@@ -1,7 +1,7 @@
 extends Button
-## Stop button for SV Jukebox
+## Skip forward button for SV Jukebox
 ##
-## This button clears the currently playing or paused track using its
+## This button skips to the next queued track using its
 ## assigned [SVJukeboxUIController]
 
 ## Shared jukebox UI controller. Place an [SVJukeboxUIController] in your scene
@@ -24,15 +24,15 @@ func _ready() -> void:
 # Signal connection
 func _on_pressed() -> void:
 	if ui_controller == null:
-		push_error("UI controller not set on stop button.")
+		push_error("UI controller not set on skip forward button.")
 		return
 	
-	ui_controller.stop()
+	ui_controller.skip_to_next_track()
 
 
 # Signal connection
 func _on_ui_controller_playing_track(track: TrackInfo) -> void:
-	disabled = false
+	update_disabled_status()
 
 
 # Signal connection
@@ -42,16 +42,26 @@ func _on_ui_controller_stopping() -> void:
 
 # Signal connection
 func _on_ui_controller_pausing() -> void:
-	# Should already have been disabled when the track started playing, but doing
+	# Should already have been enabled when the track started playing, but doing
 	# it again just in case UI Controller was manipulated in a weird way doesn't hurt.
-	disabled = false
+	update_disabled_status()
 
 
 # Signal connection
 func _on_ui_controller_resuming() -> void:
-	# Should already have been disabled when the track started playing, but doing
+	# Should already have been enabled when the track started playing, but doing
 	# it again just in case UI Controller was manipulated in a weird way doesn't hurt.
-	disabled = false
+	update_disabled_status()
+
+
+## Checks UI controller to see if any track is queued that can be skipped to,
+## and enables or disables the button appropriately.
+func update_disabled_status() -> void:
+	if ui_controller == null:
+		push_error("UI Controller not set on skip forward button")
+		return
+	
+	disabled = not ui_controller.is_any_track_queued()
 
 
 func _connect_controller_signals() -> void:
