@@ -44,9 +44,9 @@ func get_tracks_from(id: String, show_errors := true) -> Array[TrackInfo]:
 	var tracks: Array[TrackInfo] = []
 	
 	for disc in discs:
-		var show_disc_error = false
+		const SHOW_DISC_ERROR := false
 		if tracks.is_empty():
-			tracks.append_array(disc.get_tracks_from(id, show_disc_error))
+			tracks.append_array(disc.get_tracks_from(id, SHOW_DISC_ERROR))
 		else:
 			tracks.append_array(disc.get_all_tracks())
 	
@@ -54,6 +54,71 @@ func get_tracks_from(id: String, show_errors := true) -> Array[TrackInfo]:
 		push_error("Failed to get tracks from track id %s, as this track id wasn't found." % id)
 	
 	return tracks
+
+
+## Gets the [TrackInfo] for the track immediately before the track with given
+## id.
+##
+## Returns null and fails silently if there are no previous tracks
+## (because you gave the first track on the album). Pushes an error and returns
+## null if the id you gave isn't on the album.
+func get_previous_track(id: String) -> TrackInfo:
+	# TODO: inefficient implementation. get_all_tracks() iterates past the track we're looking for
+	
+	var tracks := get_all_tracks(false)
+	
+	var index := tracks.find_custom(func (t) -> bool: return t.id == id)
+	
+	if index < 0:
+		push_error("Track with id \"%s\" not found on album." % id)
+		return null
+	
+	if index == 0:
+		return null
+	
+	return tracks[index - 1]
+
+
+## Gets the last track on the album. Returns null and pushes an error if there
+## are no tracks on the album.
+func get_first_track(show_error := true) -> TrackInfo:
+	# TODO: inefficient implementation, as get_all_tracks() will iterate past
+	# the disc with the first track on it.
+	
+	var tracks := get_all_tracks(false)
+	
+	if tracks.is_empty():
+		if show_error:
+			push_error("Cannot get the first track on the album as the album is empty.")
+		return null
+	
+	return tracks.front()
+
+
+## Gets the last track on the album. Returns null and pushes an error if there
+## are no tracks on the album.
+func get_last_track(show_error := true) -> TrackInfo:
+	# TODO: inefficient implementation, better to check starting from back manually
+	# as get_all_tracks() iterates from the front.
+	
+	var tracks := get_all_tracks(false)
+	
+	if tracks.is_empty():
+		if show_error:
+			push_error("Cannot get the last track on the album as the album is empty.")
+		return null
+	
+	return tracks.back()
+
+
+## Returns true if the track with given id is the first track on the album.
+func is_first_track(id: String) -> bool:
+	var track := get_first_track(false)
+	
+	if track == null:
+		return false
+	
+	return track.id == id
 
 
 ## Gets the [TrackInfo] for the track on this album that has given id. Returns

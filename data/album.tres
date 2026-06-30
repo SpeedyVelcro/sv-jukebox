@@ -7,7 +7,7 @@
 [sub_resource type="Resource" id="Resource_40r6p"]
 script = ExtResource("2_redwd")
 id = "download"
-looping_stream_path = "uid://bg3as51rup6np"
+looping_stream_path = "uid://304b3vvocxy0"
 title = "download"
 artists = Array[String](["SpeedyVelcro"])
 metadata/_custom_type_script = "uid://ctgnm5iymuhhy"

@@ -39,6 +39,14 @@ extends HBoxContainer
 	get:
 		return stop_icon
 
+## Icon for the skip backward button.
+@export var skip_backward_icon: Texture2D:
+	set(value):
+		skip_backward_icon = value
+		_update_skip_backward_icon()
+	get:
+		return skip_backward_icon
+
 ## Icon for the skip forward button.
 @export var skip_forward_icon: Texture2D:
 	set(value):
@@ -48,6 +56,7 @@ extends HBoxContainer
 		return skip_forward_icon
 
 @onready var _stop_button: Control = $StopButton
+@onready var _skip_backward_button: Control = $SkipBackwardButton
 @onready var _play_pause_button: Control = $PlayPauseButton
 @onready var _skip_forward_button: Control = $SkipForwardButton
 
@@ -62,6 +71,9 @@ func _update_ui_controller() -> void:
 	if _stop_button != null:
 		_stop_button.ui_controller = ui_controller
 	
+	if _skip_backward_button != null:
+		_skip_backward_button.ui_controller = ui_controller
+	
 	if _play_pause_button != null:
 		_play_pause_button.ui_controller = ui_controller
 	
@@ -71,6 +83,7 @@ func _update_ui_controller() -> void:
 
 func _update_icons() -> void:
 	_update_stop_icon()
+	_update_skip_backward_icon()
 	_update_play_icon()
 	_update_pause_icon()
 	_update_skip_forward_icon()
@@ -95,6 +108,13 @@ func _update_pause_icon() -> void:
 		return
 	
 	_play_pause_button.pause_icon = pause_icon
+
+
+func _update_skip_backward_icon() -> void:
+	if _skip_backward_button == null:
+		return
+	
+	_skip_backward_button.icon = skip_backward_icon
 
 
 func _update_skip_forward_icon() -> void:

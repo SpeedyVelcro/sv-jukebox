@@ -4,6 +4,8 @@ extends Node
 ##
 ## This node mediates between the various SV Jukebox UI Scenes and the
 ## SVJukebox autoload to play music and display album and track info.
+# TODO: Spaghetti code mess, needs refactoring. Although the contract is fairly
+# clear so maybe unit testing would be a good enough stopgap.
 
 ## How to loop playing tracks if at all. Similar to the behaviour of looping
 ## in common media players.
@@ -20,6 +22,11 @@ enum LoopBehavior {
 ## Album to play and navigate using this controller. If this is set to null, the
 ## album loaded by the SVJukebox autoload on game start will be used instead.
 @export var album : AlbumInfo = null
+
+## Time window at the beginning of each track where the [method skip_backward]
+## method skips to the previous track instead of the beginning of the current
+## track (provided there is actually a previous track to skip to).
+@export var skip_backward_window_secs: float = 5.0
 
 ## Emitted when a track is being played with [method play_track].
 signal playing_track(track: TrackInfo)
@@ -53,6 +60,10 @@ var _playing_track_id := ""
 var _loop: LoopBehavior = LoopBehavior.NONE
 var _shuffle := false
 var _queued_tracks: Array[String]
+## Tracks queued in this array are considered part of the next loop and will not
+## be played if looping is off.
+var _queued_tracks_next_loop: Array[String]
+var _shuffle_history: Array[String]
 var _stream_is_linear = false
 
 
@@ -113,11 +124,19 @@ func deselect_track() -> void:
 ## Plays the entire album starting from the first track (or a random track if
 ## shuffle is on).
 func play_album() -> void:
-	pass # TODO
+	const SELECT := false
+	const QUEUE_FOLLOWING := true
+	const FORCE := true
+	play_track(get_album().get_first_track().id, SELECT, QUEUE_FOLLOWING, FORCE)
 
 
 ## Play the given track. By default, the track will also be selected. Pass in
 ## [param select] to change this behavior.
+##
+## [param queue_following] basically just clears the queue (and shuffle history if
+## applicable) and repopulates the queue with the following tracks in the album
+## (or a shuffled playlist if applicable). I might rename this at some point to
+## something more descriptive, like "new_playlist" or something, idk.
 func play_track(id: String, select := true, queue_following := true, force := false) -> void:
 	if _playing_track_id == id and not force:
 		return
@@ -150,15 +169,22 @@ func play_track(id: String, select := true, queue_following := true, force := fa
 		push_error("Failed to play audio stream.")
 		return
 	
+	if queue_following:
+		_shuffle_history.clear()
+		if _shuffle:
+			const INCLUDE_HIDDEN := false
+			_queued_tracks.assign(get_album() \
+					.get_all_tracks(INCLUDE_HIDDEN) \
+					.filter(func (t) -> bool: return t.id == id) \
+					.map(func(t): return t.id))
+			_queued_tracks.shuffle()
+		else:
+			_queued_tracks.assign(tracks.map(func (t) -> String: return t.id))
+	
 	_playing_track_id = id
 	_stream_is_linear = use_linear
 	if select:
 		select_track(id)
-	
-	if queue_following:
-		_queued_tracks.assign(tracks.map(func (t) -> String: return t.id))
-		if _shuffle:
-			_queued_tracks.shuffle()
 	
 	playing_track.emit(track)
 
@@ -219,15 +245,66 @@ func skip_to_previous_track() -> void:
 	
 	if _loop == LoopBehavior.LOOP_ONE:
 		skip_to_track_beginning()
+		return
 	
-	pass # TODO
+	if _shuffle:
+		if _shuffle_history.is_empty():
+			if _loop == LoopBehavior.LOOP:
+				_shuffle_history.assign(get_album().get_all_tracks().map(func(t): return t.id))
+				_shuffle_history.shuffle()
+				_queued_tracks_next_loop = [_playing_track_id] + _queued_tracks.duplicate()
+				_queued_tracks.clear()
+			else:
+				return
+		else:
+			_queued_tracks.push_front(_playing_track_id)
+		
+		const SELECT := false
+		const QUEUE_FOLLOWING := false
+		play_track(_shuffle_history.pop_back(), SELECT, QUEUE_FOLLOWING)
+		return
+	
+	if get_album().is_first_track(_playing_track_id):
+		if _loop == LoopBehavior.LOOP:
+			const SELECT := false
+			const QUEUE_FOLLOWING := true # No info to retain because we are unshuffled, and we want to clear the queue as we're going to a previous loop
+			play_track(get_album().get_last_track().id, SELECT, QUEUE_FOLLOWING)
+		return
+	
+	const SELECT := false
+	const QUEUE_FOLLOWING := true # No info to retain because we are unshuffled; convenient as it saves having to prepend current track to queue
+	play_track(get_album().get_previous_track(_playing_track_id).id, SELECT, QUEUE_FOLLOWING)
+
+
+## Skips backwards by typical rules for media players. Specifically, skips to
+## previous track if there is one and we are inside the window defined by
+## [member skip_backward_window_secs]. Otherwise skips to beginning.
+func skip_backward() -> void:
+	if SVJukebox.get_position() > skip_backward_window_secs:
+		skip_to_track_beginning()
+		return
+	
+	if _loop == LoopBehavior.LOOP or _loop == LoopBehavior.LOOP_ONE:
+		skip_to_previous_track()
+		return
+	
+	if _shuffle and not _shuffle_history.is_empty():
+		skip_to_previous_track()
+		return
+	
+	if not get_album().is_first_track(_playing_track_id):
+		skip_to_previous_track()
+		return
+	
+	# There is no previous track.
+	skip_to_track_beginning()
 
 
 ## If a track is currently playing and there is something queued up (or looping is
 ## enabled), this method skips to the next track. Otherwise does nothing.
 ##
 ## In the case of looping being set to loop one, the next track is actually
-## the same track, so this skips to the beginning of the track instead as that
+## the same track, so this skips backward to the beginning of the track instead as that
 ## is functionally equivalent.
 func skip_to_next_track() -> void:
 	if _playing_track_id.is_empty():
@@ -235,6 +312,7 @@ func skip_to_next_track() -> void:
 	
 	if _loop == LoopBehavior.LOOP_ONE:
 		skip_to_track_beginning()
+		return
 	
 	if _queued_tracks.is_empty():
 		if _loop == LoopBehavior.LOOP:
@@ -292,6 +370,11 @@ func set_shuffle_behavior(shuffle: bool) -> void:
 	_shuffle = shuffle
 	
 	if shuffle:
+		const INCLUDE_HIDDEN := false
+		_queued_tracks.assign(get_album() \
+				.get_all_tracks(INCLUDE_HIDDEN) \
+				.filter(func (t) -> bool: return t.id == _playing_track_id) \
+				.map(func(t): return t.id))
 		_queued_tracks.shuffle()
 	else:
 		_queued_tracks = get_album() \
