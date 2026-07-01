@@ -175,7 +175,7 @@ func play_track(id: String, select := true, queue_following := true, force := fa
 			const INCLUDE_HIDDEN := false
 			_queued_tracks.assign(get_album() \
 					.get_all_tracks(INCLUDE_HIDDEN) \
-					.filter(func (t) -> bool: return t.id == id) \
+					.filter(func (t) -> bool: return t.id != id) \
 					.map(func(t): return t.id))
 			_queued_tracks.shuffle()
 		else:
@@ -292,7 +292,7 @@ func skip_backward() -> void:
 		skip_to_previous_track()
 		return
 	
-	if not get_album().is_first_track(_playing_track_id):
+	if (not _shuffle) and not get_album().is_first_track(_playing_track_id):
 		skip_to_previous_track()
 		return
 	
@@ -377,9 +377,9 @@ func set_shuffle_behavior(shuffle: bool) -> void:
 				.map(func(t): return t.id))
 		_queued_tracks.shuffle()
 	else:
-		_queued_tracks = get_album() \
+		_queued_tracks.assign(get_album() \
 				.get_tracks_from(_playing_track_id) \
-				.map(func(t): return t.id)
+				.map(func(t): return t.id))
 		_queued_tracks.pop_front() # TODO: highly inefficient. Might be better if queued tracks was reversed
 	
 	shuffle_changed.emit(shuffle)
@@ -387,6 +387,11 @@ func set_shuffle_behavior(shuffle: bool) -> void:
 		shuffle_enabled.emit()
 	else:
 		shuffle_disabled.emit()
+
+
+## Returns true if shuffle is on.
+func is_shuffle_on() -> bool:
+	return _shuffle
 
 
 ## Returns true if there is a track after the currently queued track; either

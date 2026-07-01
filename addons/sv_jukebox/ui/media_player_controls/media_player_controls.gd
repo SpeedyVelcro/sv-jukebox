@@ -55,10 +55,27 @@ extends HBoxContainer
 	get:
 		return skip_forward_icon
 
+## Icon for the shuffle button when shuffle is on.
+@export var shuffle_on_icon: Texture2D:
+	set(value):
+		shuffle_on_icon = value
+		_update_shuffle_on_icon()
+	get:
+		return shuffle_on_icon
+
+## Icon for the shuffle button when shuffle is off.
+@export var shuffle_off_icon: Texture2D:
+	set(value):
+		shuffle_off_icon = value
+		_update_shuffle_off_icon()
+	get:
+		return shuffle_off_icon
+
 @onready var _stop_button: Control = $StopButton
 @onready var _skip_backward_button: Control = $SkipBackwardButton
 @onready var _play_pause_button: Control = $PlayPauseButton
 @onready var _skip_forward_button: Control = $SkipForwardButton
+@onready var _shuffle_button: Control = $ShuffleButton
 
 
 # Override
@@ -79,6 +96,9 @@ func _update_ui_controller() -> void:
 	
 	if _skip_forward_button != null:
 		_skip_forward_button.ui_controller = ui_controller
+	
+	if _shuffle_button != null:
+		_shuffle_button.ui_controller = ui_controller
 
 
 func _update_icons() -> void:
@@ -87,6 +107,8 @@ func _update_icons() -> void:
 	_update_play_icon()
 	_update_pause_icon()
 	_update_skip_forward_icon()
+	_update_shuffle_on_icon()
+	_update_shuffle_off_icon()
 
 
 func _update_stop_icon() -> void:
@@ -122,3 +144,17 @@ func _update_skip_forward_icon() -> void:
 		return
 	
 	_skip_forward_button.icon = skip_forward_icon
+
+
+func _update_shuffle_on_icon() -> void:
+	if _shuffle_button == null:
+		return
+	
+	_shuffle_button.shuffle_on_icon = shuffle_on_icon
+
+
+func _update_shuffle_off_icon() -> void:
+	if _shuffle_button == null:
+		return
+	
+	_shuffle_button.shuffle_off_icon = shuffle_off_icon

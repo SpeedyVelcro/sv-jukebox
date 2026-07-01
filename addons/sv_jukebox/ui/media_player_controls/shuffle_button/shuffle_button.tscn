@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://doq8mpmifmhru"]
+
+[ext_resource type="Texture2D" uid="uid://6gcy5ju56c1m" path="res://addons/sv_jukebox/icon/shuffle.svg" id="1_hnwoq"]
+[ext_resource type="Script" uid="uid://bpewd7l76rhaq" path="res://addons/sv_jukebox/ui/media_player_controls/shuffle_button/shuffle_button.gd" id="2_hnwoq"]
+[ext_resource type="Texture2D" uid="uid://ysdlo3pkeg10" path="res://addons/sv_jukebox/icon/shuffle_off.svg" id="3_nvg2i"]
+
+[node name="ShuffleButton" type="Button" unique_id=1162309528]
+custom_minimum_size = Vector2(48, 48)
+icon = ExtResource("1_hnwoq")
+expand_icon = true
+script = ExtResource("2_hnwoq")
+shuffle_on_icon = ExtResource("1_hnwoq")
+shuffle_off_icon = ExtResource("3_nvg2i")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

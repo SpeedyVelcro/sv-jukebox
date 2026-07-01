@@ -9,7 +9,10 @@
 [ext_resource type="Texture2D" uid="uid://bw882u3sw6vop" path="res://addons/sv_jukebox/icon/skip_forward.svg" id="5_q3lxt"]
 [ext_resource type="Texture2D" uid="uid://deuclc43p23re" path="res://addons/sv_jukebox/icon/skip_backward.svg" id="5_q6mh8"]
 [ext_resource type="PackedScene" uid="uid://dtat6bi3rkij4" path="res://addons/sv_jukebox/ui/media_player_controls/skip_forward_button/skip_forward_button.tscn" id="6_o1y0g"]
+[ext_resource type="Texture2D" uid="uid://6gcy5ju56c1m" path="res://addons/sv_jukebox/icon/shuffle.svg" id="7_q1bii"]
 [ext_resource type="PackedScene" uid="uid://bhxymvy7lupyt" path="res://addons/sv_jukebox/ui/media_player_controls/skip_backward_button/skip_backward_button.tscn" id="7_q3lxt"]
+[ext_resource type="Texture2D" uid="uid://ysdlo3pkeg10" path="res://addons/sv_jukebox/icon/shuffle_off.svg" id="8_w83ns"]
+[ext_resource type="PackedScene" uid="uid://doq8mpmifmhru" path="res://addons/sv_jukebox/ui/media_player_controls/shuffle_button/shuffle_button.tscn" id="11_rn5h3"]
 
 [node name="MediaPlayerControls" type="HBoxContainer" unique_id=187863056]
 alignment = 1
@@ -19,15 +22,23 @@ pause_icon = ExtResource("3_vw4ta")
 stop_icon = ExtResource("4_yssae")
 skip_backward_icon = ExtResource("5_q6mh8")
 skip_forward_icon = ExtResource("5_q3lxt")
-
-[node name="StopButton" parent="." unique_id=1162309528 instance=ExtResource("4_vw4ta")]
-layout_mode = 2
+shuffle_on_icon = ExtResource("7_q1bii")
+shuffle_off_icon = ExtResource("8_w83ns")
 
 [node name="SkipBackwardButton" parent="." unique_id=1639146383 instance=ExtResource("7_q3lxt")]
+layout_mode = 2
+
+[node name="StopButton" parent="." unique_id=1162309528 instance=ExtResource("4_vw4ta")]
 layout_mode = 2
 
 [node name="PlayPauseButton" parent="." unique_id=1406065625 instance=ExtResource("1_51pkj")]
 layout_mode = 2
 
 [node name="SkipForwardButton" parent="." unique_id=182009163 instance=ExtResource("6_o1y0g")]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="." unique_id=812555585]
+layout_mode = 2
+
+[node name="ShuffleButton" parent="." unique_id=1522905595 instance=ExtResource("11_rn5h3")]
 layout_mode = 2
