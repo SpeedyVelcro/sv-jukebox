@@ -51,7 +51,7 @@ func update_icon() -> void:
 # Signal connection
 func _on_pressed() -> void:
 	if ui_controller == null:
-		push_error("UI controller not set on stop button.")
+		push_error("UI controller not set on shuffle button.")
 		return
 	
 	ui_controller.set_shuffle_behavior(not ui_controller.is_shuffle_on())
