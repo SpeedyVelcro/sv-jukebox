@@ -458,11 +458,11 @@ func _on_sv_jukebox_loop_complete(id: String) -> void:
 	
 	match _loop:
 		LoopBehavior.NONE:
-			if _queued_tracks.is_empty():
+			if is_any_track_queued():
+				skip_to_next_track()
+			else:
 				# TODO: configurable transition
 				stop()
-			else:
-				skip_to_next_track()
 		LoopBehavior.LOOP:
 			skip_to_next_track()
 		LoopBehavior.LOOP_ONE:
@@ -476,10 +476,10 @@ func _on_sv_jukebox_track_finished(id: String) -> void:
 	
 	match _loop:
 		LoopBehavior.NONE:
-			_playing_track_id = ""
-			if not _queued_tracks.is_empty():
+			if is_any_track_queued():
 				skip_to_next_track()
 			else:
+				_playing_track_id = ""
 				stopping.emit()
 		LoopBehavior.LOOP, LoopBehavior.LOOP_ONE:
 			skip_to_next_track()
