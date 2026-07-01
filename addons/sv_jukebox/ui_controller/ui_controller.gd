@@ -362,6 +362,11 @@ func disable_loop() -> void:
 	set_loop_behavior(LoopBehavior.NONE)
 
 
+## Gets the current loop behavior.
+func get_loop_behavior() -> LoopBehavior:
+	return _loop
+
+
 ## Turns shuffle on or off.
 func set_shuffle_behavior(shuffle: bool) -> void:
 	if shuffle == _shuffle:

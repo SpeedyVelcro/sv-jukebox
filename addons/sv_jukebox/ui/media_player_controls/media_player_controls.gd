@@ -71,11 +71,36 @@ extends HBoxContainer
 	get:
 		return shuffle_off_icon
 
+## Icon for the loop button when looping is off.
+@export var loop_off_icon: Texture2D:
+	set(value):
+		loop_off_icon = value
+		_update_loop_off_icon()
+	get:
+		return loop_off_icon
+
+## Icon for the loop button when normal looping is on.
+@export var loop_icon: Texture2D:
+	set(value):
+		loop_icon = value
+		_update_loop_icon()
+	get:
+		return loop_icon
+
+## Icon for the loop button when looping an individual track.
+@export var loop_one_icon: Texture2D:
+	set(value):
+		loop_one_icon = value
+		_update_loop_one_icon()
+	get:
+		return loop_one_icon
+
 @onready var _stop_button: Control = $StopButton
 @onready var _skip_backward_button: Control = $SkipBackwardButton
 @onready var _play_pause_button: Control = $PlayPauseButton
 @onready var _skip_forward_button: Control = $SkipForwardButton
 @onready var _shuffle_button: Control = $ShuffleButton
+@onready var _loop_button: Control = $LoopButton
 
 
 # Override
@@ -99,6 +124,9 @@ func _update_ui_controller() -> void:
 	
 	if _shuffle_button != null:
 		_shuffle_button.ui_controller = ui_controller
+	
+	if _loop_button != null:
+		_loop_button.ui_controller = ui_controller
 
 
 func _update_icons() -> void:
@@ -109,6 +137,9 @@ func _update_icons() -> void:
 	_update_skip_forward_icon()
 	_update_shuffle_on_icon()
 	_update_shuffle_off_icon()
+	_update_loop_off_icon()
+	_update_loop_icon()
+	_update_loop_one_icon()
 
 
 func _update_stop_icon() -> void:
@@ -158,3 +189,24 @@ func _update_shuffle_off_icon() -> void:
 		return
 	
 	_shuffle_button.shuffle_off_icon = shuffle_off_icon
+
+
+func _update_loop_off_icon() -> void:
+	if _loop_button == null:
+		return
+	
+	_loop_button.loop_off_icon = loop_off_icon
+
+
+func _update_loop_icon() -> void:
+	if _loop_button == null:
+		return
+	
+	_loop_button.loop_icon = loop_icon
+
+
+func _update_loop_one_icon() -> void:
+	if _loop_button == null:
+		return
+	
+	_loop_button.loop_one_icon = loop_one_icon

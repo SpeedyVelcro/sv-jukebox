@@ -12,7 +12,11 @@
 [ext_resource type="Texture2D" uid="uid://6gcy5ju56c1m" path="res://addons/sv_jukebox/icon/shuffle.svg" id="7_q1bii"]
 [ext_resource type="PackedScene" uid="uid://bhxymvy7lupyt" path="res://addons/sv_jukebox/ui/media_player_controls/skip_backward_button/skip_backward_button.tscn" id="7_q3lxt"]
 [ext_resource type="Texture2D" uid="uid://ysdlo3pkeg10" path="res://addons/sv_jukebox/icon/shuffle_off.svg" id="8_w83ns"]
+[ext_resource type="Texture2D" uid="uid://bis08eb6ktts8" path="res://addons/sv_jukebox/icon/loop_off.svg" id="9_3hu7u"]
+[ext_resource type="Texture2D" uid="uid://cgmqbr1ekou1x" path="res://addons/sv_jukebox/icon/loop.svg" id="10_p700y"]
 [ext_resource type="PackedScene" uid="uid://doq8mpmifmhru" path="res://addons/sv_jukebox/ui/media_player_controls/shuffle_button/shuffle_button.tscn" id="11_rn5h3"]
+[ext_resource type="Texture2D" uid="uid://b6md0u2rec0tx" path="res://addons/sv_jukebox/icon/loop_one.svg" id="11_y5lo3"]
+[ext_resource type="PackedScene" uid="uid://cbhw6dn5gy3hq" path="res://addons/sv_jukebox/ui/media_player_controls/loop_button/loop_button.tscn" id="14_w83ns"]
 
 [node name="MediaPlayerControls" type="HBoxContainer" unique_id=187863056]
 alignment = 1
@@ -24,6 +28,9 @@ skip_backward_icon = ExtResource("5_q6mh8")
 skip_forward_icon = ExtResource("5_q3lxt")
 shuffle_on_icon = ExtResource("7_q1bii")
 shuffle_off_icon = ExtResource("8_w83ns")
+loop_off_icon = ExtResource("9_3hu7u")
+loop_icon = ExtResource("10_p700y")
+loop_one_icon = ExtResource("11_y5lo3")
 
 [node name="SkipBackwardButton" parent="." unique_id=1639146383 instance=ExtResource("7_q3lxt")]
 layout_mode = 2
@@ -41,4 +48,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="ShuffleButton" parent="." unique_id=1522905595 instance=ExtResource("11_rn5h3")]
+layout_mode = 2
+
+[node name="LoopButton" parent="." unique_id=745428770 instance=ExtResource("14_w83ns")]
 layout_mode = 2
