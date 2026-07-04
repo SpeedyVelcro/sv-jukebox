@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dis1g6xhrjrql" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://fjpidxpcjgbo" path="res://addons/sv_jukebox/ui_controller/ui_controller.gd" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://ctwlw4jbbvssn" path="res://addons/sv_jukebox/ui/buttons_track_selector/buttons_track_selector.tscn" id="3_1bvp3"]
-[ext_resource type="PackedScene" uid="uid://cgnlb85whisev" path="res://addons/sv_jukebox/ui/media_player_controls/media_player_controls.tscn" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://cgnlb85whisev" path="res://addons/sv_jukebox/ui/media_player_controls/media_player_buttons/media_player_buttons.tscn" id="4_1bvp3"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_7dm0k"]
 font_size = 32
@@ -122,7 +122,7 @@ ui_controller = NodePath("../../../SVJukeboxUIController")
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MediaPlayerControls" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=187863056 node_paths=PackedStringArray("ui_controller") instance=ExtResource("4_1bvp3")]
+[node name="MediaPlayerButtons" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=187863056 node_paths=PackedStringArray("ui_controller") instance=ExtResource("4_1bvp3")]
 layout_mode = 2
 ui_controller = NodePath("../../../../SVJukeboxUIController")
 

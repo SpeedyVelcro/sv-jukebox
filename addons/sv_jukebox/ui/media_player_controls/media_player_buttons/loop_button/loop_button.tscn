@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cbhw6dn5gy3hq"]
 
 [ext_resource type="Texture2D" uid="uid://cgmqbr1ekou1x" path="res://addons/sv_jukebox/icon/loop.svg" id="1_1qkgh"]
-[ext_resource type="Script" uid="uid://dvphm1trj85y5" path="res://addons/sv_jukebox/ui/media_player_controls/loop_button/loop_button.gd" id="2_bsdta"]
+[ext_resource type="Script" uid="uid://dvphm1trj85y5" path="res://addons/sv_jukebox/ui/media_player_controls/media_player_buttons/loop_button/loop_button.gd" id="2_bsdta"]
 [ext_resource type="Texture2D" uid="uid://bis08eb6ktts8" path="res://addons/sv_jukebox/icon/loop_off.svg" id="3_b8co7"]
 [ext_resource type="Texture2D" uid="uid://b6md0u2rec0tx" path="res://addons/sv_jukebox/icon/loop_one.svg" id="4_k8qu1"]
 

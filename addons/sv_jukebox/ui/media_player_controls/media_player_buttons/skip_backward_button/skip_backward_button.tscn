@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bhxymvy7lupyt"]
 
 [ext_resource type="Texture2D" uid="uid://deuclc43p23re" path="res://addons/sv_jukebox/icon/skip_backward.svg" id="1_qorg0"]
-[ext_resource type="Script" uid="uid://fg7w6sj4s0lj" path="res://addons/sv_jukebox/ui/media_player_controls/skip_backward_button/skip_backward_button.gd" id="2_qorg0"]
+[ext_resource type="Script" uid="uid://fg7w6sj4s0lj" path="res://addons/sv_jukebox/ui/media_player_controls/media_player_buttons/skip_backward_button/skip_backward_button.gd" id="2_qorg0"]
 
 [node name="SkipBackwardButton" type="Button" unique_id=1162309528]
 custom_minimum_size = Vector2(48, 48)
