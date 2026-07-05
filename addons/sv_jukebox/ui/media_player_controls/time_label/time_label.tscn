@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dia8o3sgcsxka"]
+
+[ext_resource type="Script" uid="uid://c6w4vim6u54g8" path="res://addons/sv_jukebox/ui/media_player_controls/time_label/time_label.gd" id="1_7sbbf"]
+
+[node name="TimeLabel" type="Label" unique_id=634770239]
+text = "0:00"
+script = ExtResource("1_7sbbf")

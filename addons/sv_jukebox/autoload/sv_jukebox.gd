@@ -300,7 +300,7 @@ func swap_stream(new_stream: AudioStream, position_offset: float = 0.0) -> void:
 ## class.
 ##
 ## Returns 0.0 if no track is playing/paused.
-func get_position() -> float:
+func get_playback_position() -> float:
 	if _current_player == null:
 		return 0.0
 	

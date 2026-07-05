@@ -30,7 +30,7 @@ func _process(delta: float) -> void:
 	max_value = length
 	
 	if not _is_dragging:
-		value = SVJukebox.get_position()
+		value = SVJukebox.get_playback_position()
 
 
 # Signal connection

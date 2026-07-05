@@ -282,7 +282,7 @@ func skip_to_previous_track() -> void:
 ## previous track if there is one and we are inside the window defined by
 ## [member skip_backward_window_secs]. Otherwise skips to beginning.
 func skip_backward() -> void:
-	if SVJukebox.get_position() > skip_backward_window_secs:
+	if SVJukebox.get_playback_position() > skip_backward_window_secs:
 		skip_to_track_beginning()
 		return
 	
@@ -446,6 +446,15 @@ func end_seek() -> void:
 ## See [method start_seek].
 func is_seeking() -> bool:
 	return _is_seeking
+
+
+## Gets seek position if currently [method is_seeking], falling back on playback
+## or pause position of the current track, further falling back on zero.
+func get_playback_or_seek_position() -> float:
+	if not is_seeking():
+		return SVJukebox.get_playback_position()
+	
+	return _seek
 
 
 func _swap_to_linear_stream_if_available() -> void:
