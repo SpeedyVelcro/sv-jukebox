@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://i2onovq88kp6"]
+
+[ext_resource type="Script" uid="uid://bidle2f0elwo8" path="res://addons/sv_jukebox/ui/media_player_controls/seek_bar/seek_bar.gd" id="1_73cuy"]
+
+[node name="SeekBar" type="HSlider" unique_id=1416280595]
+offset_right = 256.0
+offset_bottom = 16.0
+size_flags_horizontal = 3
+step = 0.0
+script = ExtResource("1_73cuy")
+
+[connection signal="drag_ended" from="." to="." method="_on_drag_ended"]
+[connection signal="drag_started" from="." to="." method="_on_drag_started"]
+[connection signal="value_changed" from="." to="." method="_on_value_changed"]

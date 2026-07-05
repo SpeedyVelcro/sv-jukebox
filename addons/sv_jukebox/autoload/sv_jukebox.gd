@@ -307,6 +307,20 @@ func get_position() -> float:
 	return _current_player.get_playback_position()
 
 
+## Returns the length of the currently playing track.
+##
+## Returns 0.0 if no track is playing/paused.
+func get_track_length() -> float:
+	if _current_player == null:
+		return 0.0
+	
+	if _current_player.stream == null:
+		push_error("Current player has no stream assigned, returning 0.0 for length.")
+		return 0.0
+	
+	return _current_player.stream.get_length()
+
+
 ## Unlock the given music track (i.e. allow it to be played in the jukebox UI)
 func unlock(id: String) -> void:
 	if not _unlocked_ids.has(id):

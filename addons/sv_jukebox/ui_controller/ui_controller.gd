@@ -65,6 +65,8 @@ var _queued_tracks: Array[String]
 var _queued_tracks_next_loop: Array[String]
 var _shuffle_history: Array[String]
 var _stream_is_linear = false
+var _is_seeking := false
+var _seek: float = 0.0
 
 
 # Override
@@ -410,6 +412,40 @@ func is_any_track_queued(including_loop_one := true) -> bool:
 	return not _queued_tracks.is_empty() \
 			or _loop == LoopBehavior.LOOP \
 			or (including_loop_one and _loop == LoopBehavior.LOOP_ONE)
+
+
+## Starts seeking through the currently playing track. This is for "drag-and-hold"
+## type seeking where the controls update continuously but you don't actually jump
+## to the new location until you release the seek control. If you need to seek
+## immediately, use the SVJukebox singleton directly instead.
+func start_seek(value: float) -> void:
+	_is_seeking = true
+	_seek = value
+
+
+## Update the timestamp while seeking. See [method start_seek].
+func update_seek(value) -> void:
+	if not _is_seeking:
+		return
+	
+	_seek = value
+
+
+## Ends the current seek and applies it (i.e. jumps playback to the new location).
+## See [method start_seek].
+func end_seek() -> void:
+	if not _is_seeking:
+		return
+	
+	_is_seeking = false
+	
+	SVJukebox.seek(_seek)
+
+
+## Returns true if the user is currently using the UI to seek through the track.
+## See [method start_seek].
+func is_seeking() -> bool:
+	return _is_seeking
 
 
 func _swap_to_linear_stream_if_available() -> void:
