@@ -19,6 +19,10 @@ config/icon="uid://c7ityn02a2h03"
 
 SVJukebox="*uid://bpddgxcxhtwfw"
 
+[display]
+
+window/stretch/mode="canvas_items"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/sv_jukebox/plugin.cfg")
