@@ -135,6 +135,7 @@ metadata/_custom_type_script = "uid://chvpucuf8rp7d"
 [resource]
 script = ExtResource("2_lw8a7")
 discs = Array[ExtResource("1_mc04b")]([SubResource("Resource_wh8b6")])
+title = "Advanced Invasion OST"
 liner_notes = "This is the Advanced Invasion OST. It is included here, in the SV Jukebox example game, as an example of an album presented via its UI elements.
 
 The soundtrack was composed for SpeedyVelcro's game \"Advanced Invasion\". It is a collection of MIDIs rendered using SoundCanvas VA using the SC-88 Pro mapping.

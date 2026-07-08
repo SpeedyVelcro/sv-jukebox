@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bc621wkqr7rhs"]
+
+[ext_resource type="Script" uid="uid://difd775cbus5t" path="res://addons/sv_jukebox/ui/info/selected_track_title/selected_track_title.gd" id="1_41sl5"]
+
+[node name="SelectedTrackTitle" type="Label" unique_id=571218577]
+offset_right = 81.0
+offset_bottom = 23.0
+size_flags_vertical = 1
+text = "Track Title"
+script = ExtResource("1_41sl5")

@@ -11,6 +11,9 @@ extends Resource
 ## single entry and the SV Jukebox UI will not use headers for discs.
 @export var discs: Array[AlbumDiscInfo] = []
 
+## Title of the album.
+@export var title: String = ""
+
 ## Liner notes for the entire album. This is a description shown in the jukebox
 ## when no track is selected.
 @export_multiline var liner_notes: String = ""

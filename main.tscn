@@ -4,12 +4,19 @@
 [ext_resource type="Script" uid="uid://fjpidxpcjgbo" path="res://addons/sv_jukebox/ui_controller/ui_controller.gd" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://ctwlw4jbbvssn" path="res://addons/sv_jukebox/ui/buttons_track_selector/buttons_track_selector.tscn" id="3_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://cgnlb85whisev" path="res://addons/sv_jukebox/ui/media_player_controls/media_player_buttons/media_player_buttons.tscn" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://bc621wkqr7rhs" path="res://addons/sv_jukebox/ui/info/selected_track_title/selected_track_title.tscn" id="4_5vw27"]
 [ext_resource type="PackedScene" uid="uid://dia8o3sgcsxka" path="res://addons/sv_jukebox/ui/media_player_controls/time_label/time_label.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" uid="uid://8ep2u88yr68m" path="res://addons/sv_jukebox/ui/info/selected_liner_notes/selected_liner_notes.tscn" id="4_272bh"]
 [ext_resource type="PackedScene" uid="uid://i2onovq88kp6" path="res://addons/sv_jukebox/ui/media_player_controls/seek_bar/seek_bar.tscn" id="4_lquwl"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_7dm0k"]
 font_size = 32
+
+[sub_resource type="FontVariation" id="FontVariation_kek77"]
+variation_embolden = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_4c57u"]
+font = SubResource("FontVariation_kek77")
 
 [node name="Main" type="Node" unique_id=1580518421]
 script = ExtResource("1_ig7tw")
@@ -124,6 +131,11 @@ ui_controller = NodePath("../../../SVJukeboxUIController")
 [node name="VBoxContainer" type="VBoxContainer" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer" unique_id=1452049452]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="SelectedTrackTitle" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=571218577 node_paths=PackedStringArray("ui_controller") instance=ExtResource("4_5vw27")]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_4c57u")
+ui_controller = NodePath("../../../../SVJukeboxUIController")
 
 [node name="SelectedLinerNotes" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1854171085 node_paths=PackedStringArray("ui_controller") instance=ExtResource("4_272bh")]
 layout_mode = 2
