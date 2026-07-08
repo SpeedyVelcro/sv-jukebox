@@ -39,7 +39,7 @@ extends Resource
 ## Liner notes for this track. Descriptive text that is displayed when this
 ## track is played in the SV Jukebox UI. If this is left blank, the album's
 ## liner notes will be displayed instead.
-@export var liner_notes: String = ""
+@export_multiline var liner_notes: String = ""
 
 ## Main artists to which the track is credited.
 @export var artists: Array[String] = []

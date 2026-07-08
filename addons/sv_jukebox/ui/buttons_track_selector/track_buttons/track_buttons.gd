@@ -163,7 +163,7 @@ func _on_play_button_pressed() -> void:
 		push_error("SV Jukebox UI controller not set for track buttons.")
 		return
 	
-	const SELECT := false
+	const SELECT := true
 	ui_controller.play_track(track_id, SELECT)
 
 
@@ -174,7 +174,9 @@ func _on_loop_button_pressed() -> void:
 		return
 	
 	ui_controller.loop_one()
-	ui_controller.play_track(track_id)
+	
+	const SELECT := true
+	ui_controller.play_track(track_id, SELECT)
 
 
 # Signal connection

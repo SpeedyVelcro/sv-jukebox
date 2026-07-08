@@ -9,6 +9,7 @@ script = ExtResource("2_redwd")
 id = "download"
 looping_stream_path = "uid://304b3vvocxy0"
 title = "download"
+liner_notes = "These are the liner notes for the first track on the Advanced Invasion OST, \"download\"."
 artists = Array[String](["SpeedyVelcro"])
 metadata/_custom_type_script = "uid://ctgnm5iymuhhy"
 
@@ -17,6 +18,7 @@ script = ExtResource("2_redwd")
 id = "invasion"
 looping_stream_path = "uid://bxw3brjumrch"
 title = "invasion"
+liner_notes = "These are the liner notes for the second track on the Advanced Invasion OST, \"invasion\"."
 artists = Array[String](["SpeedyVelcro"])
 metadata/_custom_type_script = "uid://ctgnm5iymuhhy"
 
@@ -133,4 +135,9 @@ metadata/_custom_type_script = "uid://chvpucuf8rp7d"
 [resource]
 script = ExtResource("2_lw8a7")
 discs = Array[ExtResource("1_mc04b")]([SubResource("Resource_wh8b6")])
+liner_notes = "This is the Advanced Invasion OST. It is included here, in the SV Jukebox example game, as an example of an album presented via its UI elements.
+
+The soundtrack was composed for SpeedyVelcro's game \"Advanced Invasion\". It is a collection of MIDIs rendered using SoundCanvas VA using the SC-88 Pro mapping.
+
+On side A, you will find all the main music tracks in the game. On side B, you will find variations of those tracks (in this case only Brash has variations)."
 metadata/_custom_type_script = "uid://c4mywst67rhre"

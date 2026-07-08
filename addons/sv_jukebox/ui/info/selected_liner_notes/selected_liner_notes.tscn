@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://8ep2u88yr68m"]
+
+[ext_resource type="Script" uid="uid://dk0itqt7wbd21" path="res://addons/sv_jukebox/ui/info/selected_liner_notes/selected_liner_notes.gd" id="1_daq5f"]
+
+[node name="SelectedLinerNotes" type="RichTextLabel" unique_id=1854171085]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+script = ExtResource("1_daq5f")

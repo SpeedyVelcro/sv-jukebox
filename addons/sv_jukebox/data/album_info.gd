@@ -13,7 +13,7 @@ extends Resource
 
 ## Liner notes for the entire album. This is a description shown in the jukebox
 ## when no track is selected.
-@export var liner_notes: String = ""
+@export_multiline var liner_notes: String = ""
 
 ## Fill in this field to display a download button in the jukebox UI.
 @export var download_url: String = ""
