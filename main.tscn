@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://ctwlw4jbbvssn" path="res://addons/sv_jukebox/ui/buttons_track_selector/buttons_track_selector.tscn" id="3_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://fsot1vh4mmw0" path="res://addons/sv_jukebox/ui/play_all_button/play_all_button.tscn" id="3_kek77"]
 [ext_resource type="PackedScene" uid="uid://cgnlb85whisev" path="res://addons/sv_jukebox/ui/media_player_controls/media_player_buttons/media_player_buttons.tscn" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://ce6b2cxp556du" path="res://addons/sv_jukebox/ui/shuffle_all_button/shuffle_all_button.tscn" id="4_4c57u"]
 [ext_resource type="PackedScene" uid="uid://bc621wkqr7rhs" path="res://addons/sv_jukebox/ui/info/selected_track_title/selected_track_title.tscn" id="4_5vw27"]
 [ext_resource type="PackedScene" uid="uid://dia8o3sgcsxka" path="res://addons/sv_jukebox/ui/media_player_controls/time_label/time_label.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" uid="uid://8ep2u88yr68m" path="res://addons/sv_jukebox/ui/info/selected_liner_notes/selected_liner_notes.tscn" id="4_272bh"]
@@ -132,6 +133,11 @@ size_flags_horizontal = 3
 layout_mode = 2
 
 [node name="PlayAllButton" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1757967544 node_paths=PackedStringArray("ui_controller") instance=ExtResource("3_kek77")]
+layout_mode = 2
+size_flags_horizontal = 3
+ui_controller = NodePath("../../../../../SVJukeboxUIController")
+
+[node name="ShuffleAllButton" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=384739053 node_paths=PackedStringArray("ui_controller") instance=ExtResource("4_4c57u")]
 layout_mode = 2
 size_flags_horizontal = 3
 ui_controller = NodePath("../../../../../SVJukeboxUIController")

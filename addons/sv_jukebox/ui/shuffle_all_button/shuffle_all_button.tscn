@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://ce6b2cxp556du"]
+
+[ext_resource type="Texture2D" uid="uid://6gcy5ju56c1m" path="res://addons/sv_jukebox/icon/shuffle.svg" id="1_4es1h"]
+[ext_resource type="Script" uid="uid://cykmtdy4tohvg" path="res://addons/sv_jukebox/ui/shuffle_all_button/shuffle_all_button.gd" id="2_0pxvv"]
+
+[node name="ShuffleAllButton" type="Button" unique_id=1757967544]
+custom_minimum_size = Vector2(116, 0)
+text = "Shuffle All"
+icon = ExtResource("1_4es1h")
+expand_icon = true
+script = ExtResource("2_0pxvv")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]
