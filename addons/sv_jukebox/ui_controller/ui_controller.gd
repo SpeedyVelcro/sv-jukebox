@@ -349,6 +349,12 @@ func set_loop_behavior(behavior: LoopBehavior) -> void:
 	loop_behavior_changed.emit(behavior)
 
 
+## Returns the current loop behavior, as set by [method set_loop_behavior] or any
+## of the other loop methods.
+func get_loop_behavior() -> LoopBehavior:
+	return _loop
+
+
 ## Sets looping behavior to loop the entire album.
 func loop() -> void:
 	set_loop_behavior(LoopBehavior.LOOP)
@@ -362,11 +368,6 @@ func loop_one() -> void:
 ## Turn off looping behavior.
 func disable_loop() -> void:
 	set_loop_behavior(LoopBehavior.NONE)
-
-
-## Gets the current loop behavior.
-func get_loop_behavior() -> LoopBehavior:
-	return _loop
 
 
 ## Turns shuffle on or off.

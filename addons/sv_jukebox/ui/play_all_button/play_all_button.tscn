@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://fsot1vh4mmw0"]
+
+[ext_resource type="Texture2D" uid="uid://d2xutkktvdii4" path="res://addons/sv_jukebox/icon/play.svg" id="1_xs1wq"]
+[ext_resource type="Script" uid="uid://ksepka47nlkj" path="res://addons/sv_jukebox/ui/play_all_button/play_all_button.gd" id="2_tbg83"]
+
+[node name="PlayAllButton" type="Button" unique_id=1757967544]
+custom_minimum_size = Vector2(96, 0)
+text = "Play All"
+icon = ExtResource("1_xs1wq")
+expand_icon = true
+script = ExtResource("2_tbg83")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]
