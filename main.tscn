@@ -14,6 +14,9 @@
 [sub_resource type="LabelSettings" id="LabelSettings_7dm0k"]
 font_size = 32
 
+[sub_resource type="LabelSettings" id="LabelSettings_efxa6"]
+font_size = 32
+
 [sub_resource type="FontVariation" id="FontVariation_kek77"]
 variation_embolden = 1.0
 
@@ -120,6 +123,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="Label" parent="Control/JukeboxControl/VBoxContainer" unique_id=1335854245]
+layout_mode = 2
+text = "Jukebox"
+label_settings = SubResource("LabelSettings_efxa6")
+horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/JukeboxControl/VBoxContainer" unique_id=665141549]
 layout_mode = 2
