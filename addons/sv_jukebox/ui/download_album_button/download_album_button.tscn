@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cxkio4e0gvbaa"]
+
+[ext_resource type="Script" uid="uid://baaybsmgetp6o" path="res://addons/sv_jukebox/ui/download_album_button/download_album_button.gd" id="1_os72a"]
+
+[node name="DownloadAlbumButton" type="Button" unique_id=745012040]
+text = "Download Album"
+script = ExtResource("1_os72a")
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

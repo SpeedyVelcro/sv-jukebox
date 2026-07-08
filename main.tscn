@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dia8o3sgcsxka" path="res://addons/sv_jukebox/ui/media_player_controls/time_label/time_label.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" uid="uid://8ep2u88yr68m" path="res://addons/sv_jukebox/ui/info/selected_liner_notes/selected_liner_notes.tscn" id="4_272bh"]
 [ext_resource type="PackedScene" uid="uid://i2onovq88kp6" path="res://addons/sv_jukebox/ui/media_player_controls/seek_bar/seek_bar.tscn" id="4_lquwl"]
+[ext_resource type="PackedScene" uid="uid://cxkio4e0gvbaa" path="res://addons/sv_jukebox/ui/download_album_button/download_album_button.tscn" id="11_efxa6"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_7dm0k"]
 font_size = 32
@@ -130,6 +131,10 @@ text = "Jukebox"
 label_settings = SubResource("LabelSettings_efxa6")
 horizontal_alignment = 1
 
+[node name="ReferenceRect" type="ReferenceRect" parent="Control/JukeboxControl/VBoxContainer" unique_id=808377280]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/JukeboxControl/VBoxContainer" unique_id=665141549]
 layout_mode = 2
 size_flags_vertical = 3
@@ -198,6 +203,15 @@ type = 2
 [node name="MediaPlayerButtons" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=187863056 node_paths=PackedStringArray("ui_controller") instance=ExtResource("4_1bvp3")]
 layout_mode = 2
 ui_controller = NodePath("../../../../SVJukeboxUIController")
+
+[node name="DownloadAlbumButton" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=745012040 node_paths=PackedStringArray("ui_controller") instance=ExtResource("11_efxa6")]
+layout_mode = 2
+size_flags_horizontal = 8
+ui_controller = NodePath("../../../../SVJukeboxUIController")
+
+[node name="ReferenceRect2" type="ReferenceRect" parent="Control/JukeboxControl/VBoxContainer" unique_id=989953163]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Control/JukeboxControl/VBoxContainer" unique_id=1203091037]
 layout_mode = 2
