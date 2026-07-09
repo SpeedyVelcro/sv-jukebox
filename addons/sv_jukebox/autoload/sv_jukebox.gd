@@ -282,6 +282,7 @@ func swap_stream(new_stream: AudioStream, position_offset: float = 0.0) -> void:
 	var new_position = current_position
 	new_position += position_offset
 	if new_position > new_stream.get_length():
+		# TODO: Probably should add the difference to the loop start instead.
 		new_position = new_position - new_stream.get_length()
 	elif new_position < 0.0:
 		new_position = new_stream.get_length() + new_position
