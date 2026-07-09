@@ -381,7 +381,7 @@ func set_shuffle_behavior(shuffle: bool) -> void:
 		const INCLUDE_HIDDEN := false
 		_queued_tracks.assign(get_album() \
 				.get_all_tracks(INCLUDE_HIDDEN) \
-				.filter(func (t) -> bool: return t.id == _playing_track_id) \
+				.filter(func (t) -> bool: return t.id != _playing_track_id) \
 				.map(func(t): return t.id))
 		_queued_tracks.shuffle()
 	else:
