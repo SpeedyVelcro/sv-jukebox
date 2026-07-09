@@ -162,8 +162,6 @@ func update_album() -> void:
 			_add_side_b_title(disc)
 		
 		_add_all_tracks_from_disc_side(disc.side_b)
-	
-	# TODO: anything else?
 
 
 func _add_disc_title(disc: AlbumDiscInfo, disc_number: int) -> void:
