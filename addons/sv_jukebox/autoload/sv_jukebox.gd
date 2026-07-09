@@ -334,6 +334,17 @@ func unlock_all() -> void:
 	for id in _audio_stream_paths.keys():
 		unlock(id)
 
+
+## Returns true if the given music track is unlocked e.g. by using [method unlock].
+func is_unlocked(id: String) -> bool:
+	return _unlocked_ids.has(id)
+
+
+## Returns [code]true[/code] if the given music track has not been unlocked.
+func is_locked(id: String) -> bool:
+	return not is_unlocked(id)
+
+
 ## Save progress unlocking music tracks for the jukebox. This is automatically
 ## called when closing the game via the desktop/window, however you will have
 ## to call this manually when quitting the game yourself (e.g. when calling

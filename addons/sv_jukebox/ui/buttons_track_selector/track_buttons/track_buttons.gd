@@ -23,6 +23,16 @@ extends HBoxContainer
 		return track_id
 
 @export_group("Functionality")
+## Text to display when a track is locked, provided
+## [member SVJukeboxUIController.respect_track_lock_status] is [code]true[/code].
+## This is displayed in place of the track's title, so it will come after the
+## track number if [member number_track_name] is [code]true[/code].
+@export var locked_track_text := "???":
+	set(value):
+		locked_track_text = value
+		_update_track_button_text()
+	get():
+		return locked_track_text
 ## Set to true to display a number before the name of each track.
 @export var number_track_name := true:
 	set(value):
@@ -96,18 +106,10 @@ var _in_double_click_window := false
 # Override
 func _ready() -> void:
 	_update_all()
-
-
-func _generate_track_button_text() -> String:
-	var track_info := _get_track_info()
+	_connect_signals()
 	
-	if track_info == null:
-		return "Undefined"
-	
-	if not number_track_name:
-		return track_info.title
-	
-	return (number_format_template % track_number) + track_info.title
+	if _is_track_locked():
+		_lock_buttons()
 
 
 func _update_all() -> void:
@@ -121,6 +123,21 @@ func _update_track_button_text() -> void:
 		return
 	
 	_track_button.text = _generate_track_button_text()
+
+
+func _generate_track_button_text() -> String:
+	var track_info := _get_track_info()
+	var title: String
+	
+	if track_info == null:
+		title = "Undefined"
+	
+	title = locked_track_text if _is_track_locked() else track_info.title
+	
+	if not number_track_name:
+		return title
+	
+	return (number_format_template % track_number) + title
 
 
 func _update_play_button() -> void:
@@ -155,6 +172,46 @@ func _get_track_info() -> TrackInfo:
 	var album := ui_controller.get_album()
 	
 	return album.get_track_info(track_id)
+
+
+func _is_track_locked() -> bool:
+	if ui_controller == null:
+		push_error("SV Jukebox UI controller not set for track buttons.")
+		return false
+	
+	return SVJukebox.is_locked(track_id) if ui_controller.respect_track_lock_status else false
+
+
+func _lock_buttons() -> void:
+	# No child null checks; never called before ready.
+	
+	_play_button.disabled = true
+	_loop_button.disabled = true
+	_track_button.disabled = true
+	_update_track_button_text()
+
+
+func _unlock_buttons() -> void:
+	_play_button.disabled = false
+	_loop_button.disabled = false
+	_track_button.disabled = false
+	_update_track_button_text()
+
+
+func _connect_signals() -> void:
+	if not SVJukebox.unlocked.is_connected(_on_sv_jukebox_unlocked):
+		SVJukebox.unlocked.connect(_on_sv_jukebox_unlocked)
+	
+	if not SVJukebox.unlock_removed.is_connected(_on_sv_jukebox_unlock_removed):
+		SVJukebox.unlock_removed.connect(_on_sv_jukebox_unlock_removed)
+
+
+func _disconnect_signals() -> void:
+	if SVJukebox.unlocked.is_connected(_on_sv_jukebox_unlocked):
+		SVJukebox.unlocked.disconnect(_on_sv_jukebox_unlocked)
+	
+	if SVJukebox.unlock_removed.is_connected(_on_sv_jukebox_unlock_removed):
+		SVJukebox.unlock_removed.disconnect(_on_sv_jukebox_unlock_removed)
 
 
 # Signal connection
@@ -201,3 +258,24 @@ func _on_track_button_pressed() -> void:
 # Signal connection
 func _on_double_click_timer_timeout() -> void:
 	_in_double_click_window = false
+
+
+# Signal connection
+func _on_sv_jukebox_unlocked(id: String) -> void:
+	if id != track_id:
+		return
+	
+	_unlock_buttons()
+
+
+# Signal connection
+func _on_sv_jukebox_unlock_removed(id: String) -> void:
+	if id != track_id:
+		return
+	
+	_lock_buttons()
+
+
+# Override
+func _exit_tree() -> void:
+	_disconnect_signals()

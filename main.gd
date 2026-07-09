@@ -30,6 +30,10 @@ func _on_unlock_petra_button_pressed() -> void:
 	SVJukebox.unlock("petra")
 
 
+func _on_unlock_all_button_pressed() -> void:
+	SVJukebox.unlock_all()
+
+
 func _on_to_jukebox_button_pressed() -> void:
 	$Control/SimControl.visible = false
 	$Control/JukeboxControl.visible = true

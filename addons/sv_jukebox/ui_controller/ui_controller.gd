@@ -28,6 +28,10 @@ enum LoopBehavior {
 ## track (provided there is actually a previous track to skip to).
 @export var skip_backward_window_secs: float = 5.0
 
+## When [code]true[/code], will block locked tracks from playback and selection
+## (you must first unlock them with [method SVJukebox.unlock]).
+@export var respect_track_lock_status := true
+
 ## Emitted when a track is being played with [method play_track].
 signal playing_track(track: TrackInfo)
 ## Emitted when a track is selected or deselected with [method select_track]. [param track]
@@ -126,10 +130,21 @@ func deselect_track() -> void:
 ## Plays the entire album starting from the first track (or a random track if
 ## shuffle is on).
 func play_album() -> void:
+	var id: String
+	if respect_track_lock_status:
+		var tracks := get_album().get_all_tracks()
+		var track_index: int = tracks.find_custom(func (t) -> bool: return SVJukebox.is_unlocked(t.id))
+		if track_index < 0:
+			push_error("Cannot play album while there are no tracks unlocked if UI controller's respect_track_unlock_status is true.")
+			return
+		id = tracks[track_index].id
+	else:
+		id = get_album().get_first_track().id
+	
 	const SELECT := false
 	const QUEUE_FOLLOWING := true
 	const FORCE := true
-	play_track(get_album().get_first_track().id, SELECT, QUEUE_FOLLOWING, FORCE)
+	play_track(id, SELECT, QUEUE_FOLLOWING, FORCE)
 
 
 ## Play the given track. By default, the track will also be selected. Pass in
@@ -141,6 +156,10 @@ func play_album() -> void:
 ## something more descriptive, like "new_playlist" or something, idk.
 func play_track(id: String, select := true, queue_following := true, force := false) -> void:
 	if _playing_track_id == id and not force:
+		return
+	
+	if respect_track_lock_status and SVJukebox.is_locked(id):
+		push_error("UI controller cannot play locked track %s while respect_track_lock_status is true." % id)
 		return
 	
 	var tracks: Array[TrackInfo] = get_album().get_tracks_from(id)
@@ -182,6 +201,9 @@ func play_track(id: String, select := true, queue_following := true, force := fa
 			_queued_tracks.shuffle()
 		else:
 			_queued_tracks.assign(tracks.map(func (t) -> String: return t.id))
+	
+	if respect_track_lock_status:
+		_queued_tracks.assign(_queued_tracks.filter(func (id) -> bool: return SVJukebox.is_unlocked(id)))
 	
 	_playing_track_id = id
 	_stream_is_linear = use_linear
@@ -389,6 +411,9 @@ func set_shuffle_behavior(shuffle: bool) -> void:
 				.get_tracks_from(_playing_track_id) \
 				.map(func(t): return t.id))
 		_queued_tracks.pop_front() # TODO: highly inefficient. Might be better if queued tracks was reversed
+	
+	if respect_track_lock_status:
+		_queued_tracks.assign(_queued_tracks.filter(func (id) -> bool: return SVJukebox.is_unlocked(id)))
 	
 	shuffle_changed.emit(shuffle)
 	if shuffle:
