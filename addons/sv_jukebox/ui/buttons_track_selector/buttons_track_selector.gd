@@ -191,7 +191,7 @@ func _add_side_a_title(disc: AlbumDiscInfo) -> void:
 
 
 func _add_side_b_title(disc: AlbumDiscInfo) -> void:
-	_add_disc_title(disc, false)
+	_add_side_title(disc, false)
 
 
 func _add_track_buttons(track_id: String, track_number: int) -> void:
