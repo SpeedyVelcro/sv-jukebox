@@ -34,6 +34,10 @@ func _on_unlock_all_button_pressed() -> void:
 	SVJukebox.unlock_all()
 
 
+func _on_remove_all_unlocks_button_pressed() -> void:
+	SVJukebox.remove_all_unlocks()
+
+
 func _on_to_jukebox_button_pressed() -> void:
 	$Control/SimControl.visible = false
 	$Control/JukeboxControl.visible = true

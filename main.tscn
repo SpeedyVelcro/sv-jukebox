@@ -98,6 +98,10 @@ text = "Unlock Petra"
 layout_mode = 2
 text = "Unlock All"
 
+[node name="RemoveAllUnlocksButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=972672531]
+layout_mode = 2
+text = "Remove All Unlocks"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/SimControl/VBoxContainer" unique_id=1906157803]
 layout_mode = 2
 
@@ -232,6 +236,7 @@ text = "Back To Sim"
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/PlayPetraButton" to="." method="_on_play_petra_button_pressed"]
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/UnlockPetraButton" to="." method="_on_unlock_petra_button_pressed"]
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/UnlockAllButton" to="." method="_on_unlock_all_button_pressed"]
+[connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/RemoveAllUnlocksButton" to="." method="_on_remove_all_unlocks_button_pressed"]
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer/ToJukeboxButton" to="." method="_on_to_jukebox_button_pressed"]
 [connection signal="pressed" from="Control/JukeboxControl/VBoxContainer/HBoxContainer2/JukeboxBackButton" to="." method="_on_jukebox_back_button_pressed"]

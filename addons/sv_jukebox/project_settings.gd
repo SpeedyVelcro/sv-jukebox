@@ -21,6 +21,14 @@ static func add_settings() -> void:
 		"name": SVJukeboxConstants.SETTINGS_AUDIO_BUS_NAME,
 		"type": TYPE_STRING
 	})
+	
+	if not ProjectSettings.has_setting(SVJukeboxConstants.SETTINGS_UNLOCKS_FILE_PATH):
+		ProjectSettings.set_setting(SVJukeboxConstants.SETTINGS_UNLOCKS_FILE_PATH, SVJukeboxConstants.DEFAULT_UNLOCKS_PATH) 
+	ProjectSettings.set_initial_value(SVJukeboxConstants.SETTINGS_UNLOCKS_FILE_PATH, SVJukeboxConstants.DEFAULT_UNLOCKS_PATH)
+	ProjectSettings.add_property_info({
+		"name": SVJukeboxConstants.SETTINGS_UNLOCKS_FILE_PATH,
+		"type": TYPE_STRING
+	})
 
 
 ## Get the current value of the album path setting
@@ -31,6 +39,11 @@ static func get_album_path() -> String:
 ## Get the current value of the audio bus name setting
 static func get_audio_bus_name() -> String:
 	return _get_string_setting(SVJukeboxConstants.SETTINGS_AUDIO_BUS_NAME, "Master") # TODO: Move default bus name to a constant
+
+
+## Get the current value of the unlocks file setting
+static func get_unlocks_file() -> String:
+	return _get_string_setting(SVJukeboxConstants.SETTINGS_UNLOCKS_FILE_PATH, SVJukeboxConstants.DEFAULT_UNLOCKS_PATH)
 
 
 static func _get_string_setting(path: String, default_value := "") -> String:

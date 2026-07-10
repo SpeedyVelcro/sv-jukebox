@@ -6,6 +6,12 @@ extends Node
 ## SVJukebox autoload to play music and display album and track info.
 # TODO: Spaghetti code mess, needs refactoring. Although the contract is fairly
 # clear so maybe unit testing would be a good enough stopgap.
+# TODO: There is an inevitable bug remaining where an error will occur if a track
+# is locked while it is queued, and playback continues to that track. Not super
+# dangerous since it will just stop playback and log the error to the console,
+# and this is an exceedingly unlikely scenario anyway since there is almost never
+# a good reason to lock tracks. Still, I should fix it by removing an id from
+# the queued tracks when it gets locked.
 
 ## How to loop playing tracks if at all. Similar to the behaviour of looping
 ## in common media players.
@@ -143,8 +149,8 @@ func play_album() -> void:
 	
 	const SELECT := false
 	const QUEUE_FOLLOWING := true
-	const FORCE := true
-	play_track(id, SELECT, QUEUE_FOLLOWING, FORCE)
+	const FORCE_SAME := true
+	play_track(id, SELECT, QUEUE_FOLLOWING, FORCE_SAME)
 
 
 ## Play the given track. By default, the track will also be selected. Pass in
@@ -154,11 +160,19 @@ func play_album() -> void:
 ## applicable) and repopulates the queue with the following tracks in the album
 ## (or a shuffled playlist if applicable). I might rename this at some point to
 ## something more descriptive, like "new_playlist" or something, idk.
-func play_track(id: String, select := true, queue_following := true, force := false) -> void:
-	if _playing_track_id == id and not force:
+##
+## [param force_same] forces playback even if the [param id] is the some as the
+## currently playing track (this will likely just start playback from the
+## beginning of the same track again).
+##
+## [param force_locked] forces playback even if track with given [param id] is
+## locked. Queued tracks will still be filtered though (this is all provided that
+## [member respect_track_lock_status] is true).
+func play_track(id: String, select := true, queue_following := true, force_same := false, force_locked := false) -> void:
+	if _playing_track_id == id and not force_same:
 		return
 	
-	if respect_track_lock_status and SVJukebox.is_locked(id):
+	if force_locked or (respect_track_lock_status and SVJukebox.is_locked(id)):
 		push_error("UI controller cannot play locked track %s while respect_track_lock_status is true." % id)
 		return
 	
@@ -253,8 +267,9 @@ func skip_to_track_beginning() -> void:
 	
 	const SELECT := false
 	const QUEUE_FOLLOWING := false
-	const FORCE := true # Needs to be forced as ID might be the same in the case of loop one.
-	play_track(_playing_track_id, SELECT, QUEUE_FOLLOWING, FORCE)
+	const FORCE_SAME := true # Needs to be forced as ID might be the same in the case of loop one.
+	const FORCE_LOCKED := true
+	play_track(_playing_track_id, SELECT, QUEUE_FOLLOWING, FORCE_SAME, FORCE_LOCKED)
 
 
 ## If there were previously tracks queued before this one (or looping is enabled),

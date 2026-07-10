@@ -48,7 +48,6 @@ signal unlock_removed(id: String)
 # Override
 func _ready() -> void:
 	# TODO: Make initial number of players configurable
-	# TODO: Load unlocks
 	
 	var album_path := SVJukeboxProjectSettings.get_album_path()
 	if not (album_path.is_absolute_path() or album_path.is_relative_path()):
@@ -64,6 +63,8 @@ func _ready() -> void:
 	
 	_add_player()
 	_add_player()
+	
+	load_unlocks()
 
 
 # Override
@@ -329,10 +330,24 @@ func unlock(id: String) -> void:
 		unlocked.emit(id)
 
 
+## Locks the given track so it can't be played in the jukebox UI. Opposite of
+## [method unlock].
+func remove_unlock(id: String) -> void:
+	if _unlocked_ids.has(id):
+		_unlocked_ids.erase(id)
+		unlock_removed.emit(id)
+
+
 ## Unlocks all tracks. See [method unlock]
 func unlock_all() -> void:
 	for id in _audio_stream_paths.keys():
 		unlock(id)
+
+
+## Locks all tracks so they can't be played in the jukebox UI.
+func remove_all_unlocks() -> void:
+	for id in _audio_stream_paths.keys():
+		remove_unlock(id)
 
 
 ## Returns true if the given music track is unlocked e.g. by using [method unlock].
@@ -350,7 +365,84 @@ func is_locked(id: String) -> bool:
 ## to call this manually when quitting the game yourself (e.g. when calling
 ## get_tree().quit())
 func save_unlocks() -> void:
-	pass # TODO
+	var file_path := SVJukeboxProjectSettings.get_unlocks_file()
+	
+	if not file_path.is_absolute_path():
+		push_error("Cannot save music unlocks to file \"%s\" as it is not a valid absolute path. You probably need to start the path with \"user://\"." % file_path)
+		return
+	
+	var base_dir := file_path.get_base_dir()
+	var dir_error := DirAccess.make_dir_recursive_absolute(base_dir)
+	if dir_error != OK:
+		push_error("Failed to create directory \"%s\" with error %d when saving music unlocks. This may prevent music unlocks from saving." % [base_dir, dir_error])
+	
+	var dict := _serialize_unlocks()
+	
+	var file := FileAccess.open(file_path, FileAccess.WRITE)
+	
+	if file == null:
+		push_error("Failed to open file music unlock file \"%s\". Error code was %d." % [file_path, FileAccess.get_open_error()])
+		return
+	
+	file.store_string(JSON.stringify(dict, "\t"))
+	
+	file.close()
+
+
+func load_unlocks() -> void:
+	var file_path := SVJukeboxProjectSettings.get_unlocks_file()
+	
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	
+	if file == null:
+		var err := FileAccess.get_open_error()
+		if err != ERR_FILE_NOT_FOUND: # File not found can fail silently because it's probably just the first launch.
+			push_error("Failed to open file music unlock file \"%s\". Error code was %d." % [file_path, err])
+		return
+	
+	var json := file.get_as_text()
+	
+	var dict = JSON.parse_string(json)
+	
+	if dict == null:
+		push_error("Failed to parse music unlock file at path \"%s\"" % file_path)
+		return
+	
+	if dict is not Dictionary:
+		push_error("Parsed music unlock file at path \"%s\" as wrong type. It should be a dictionary." % file_path)
+		return
+	
+	_deserialize_unlocks(dict)
+
+
+func _serialize_unlocks() -> Dictionary:
+	# We use a dictionary rather than storing the array directly, just in case we
+	# need to store other properties in future.
+	var dict: Dictionary = {}
+	
+	# TODO: Move unlocked_ids to a constant
+	dict["unlocked_ids"] = []
+	dict["unlocked_ids"].assign(_unlocked_ids)
+	
+	return dict
+
+
+func _deserialize_unlocks(dict: Dictionary) -> void:
+	# TODO: Move unlocked_ids to a constant
+	if (not dict.has("unlocked_ids")) or dict["unlocked_ids"] is not Array:
+		push_error("unlocked_ids section missing from music_unlocks or wrong type. Assuming no unlocks.")
+		remove_all_unlocks()
+		return
+	
+	remove_all_unlocks()
+	
+	# TODO: Move unlocked_ids to a constant
+	for id in dict["unlocked_ids"]:
+		if id is not String:
+			push_error("One of the ids in the music unlocks file is not a string. It will be skipped.")
+			continue
+		
+		unlock(id)
 
 
 ## Register the [AudioStream] file at the given path with the given id, so it
