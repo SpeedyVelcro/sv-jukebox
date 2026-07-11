@@ -231,6 +231,11 @@ ui_controller = NodePath("../../../../SVJukeboxUIController")
 layout_mode = 2
 ui_controller = NodePath("../../../../SVJukeboxUIController")
 
+[node name="DownloadAlbumButton" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=745012040 node_paths=PackedStringArray("ui_controller") instance=ExtResource("11_efxa6")]
+layout_mode = 2
+size_flags_horizontal = 8
+ui_controller = NodePath("../../../../SVJukeboxUIController")
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=221416299]
 layout_mode = 2
 
@@ -241,6 +246,7 @@ label_settings = SubResource("LabelSettings_ycdy4")
 
 [node name="CurrentlyPlayingTitle" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1375628940 node_paths=PackedStringArray("ui_controller") instance=ExtResource("8_dg77c")]
 layout_mode = 2
+size_flags_horizontal = 3
 ui_controller = NodePath("../../../../../SVJukeboxUIController")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1593328619]
@@ -265,11 +271,6 @@ type = 2
 
 [node name="MediaPlayerButtons" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=187863056 node_paths=PackedStringArray("ui_controller") instance=ExtResource("4_1bvp3")]
 layout_mode = 2
-ui_controller = NodePath("../../../../SVJukeboxUIController")
-
-[node name="DownloadAlbumButton" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=745012040 node_paths=PackedStringArray("ui_controller") instance=ExtResource("11_efxa6")]
-layout_mode = 2
-size_flags_horizontal = 8
 ui_controller = NodePath("../../../../SVJukeboxUIController")
 
 [node name="ReferenceRect2" type="ReferenceRect" parent="Control/JukeboxControl/VBoxContainer" unique_id=989953163]
