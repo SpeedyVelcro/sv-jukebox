@@ -108,6 +108,8 @@ func play(id: String, from_position: float = 0.0, transition: TransitionType = T
 	if stream == null or stream is not AudioStream:
 		push_error("SV Jukebox couldn't load the AudioStream, or it was a different kind of resource. Requested music with ID %s will not play." % id)
 		return
+	
+	play_stream(stream, id, from_position, transition, transition_duration_secs)
 
 
 ## As [method play], but defaults to not unlocking the track without having to pass
