@@ -353,7 +353,8 @@ func unlock_all() -> void:
 ## Locks all tracks so they can't be played in the jukebox UI. Only tracks that
 ## are marked as "always unlocked" in project settings will remain.
 func remove_all_unlocks() -> void:
-	for id in _audio_stream_paths.keys():
+	var ids := _unlocked_ids.duplicate() # Because _unlocked_ids will be modified as we iterate through it
+	for id in ids:
 		remove_unlock(id)
 
 
