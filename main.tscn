@@ -247,6 +247,7 @@ label_settings = SubResource("LabelSettings_ycdy4")
 [node name="CurrentlyPlayingTitle" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1375628940 node_paths=PackedStringArray("ui_controller") instance=ExtResource("8_dg77c")]
 layout_mode = 2
 size_flags_horizontal = 3
+text_overrun_behavior = 5
 ui_controller = NodePath("../../../../../SVJukeboxUIController")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1593328619]
