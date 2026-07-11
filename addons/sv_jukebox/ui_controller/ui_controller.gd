@@ -192,10 +192,10 @@ func play_album() -> void:
 ## locked. Queued tracks will still be filtered though (this is all provided that
 ## [member respect_track_lock_status] is true).
 func play_track(id: String, select := true, queue_following := true, force_same := false, force_locked := false) -> void:
-	if _playing_track_id == id and not force_same:
+	if (not force_same) and (_playing_track_id == id):
 		return
 	
-	if force_locked or (respect_track_lock_status and SVJukebox.is_locked(id)):
+	if (not force_locked) and (respect_track_lock_status and SVJukebox.is_locked(id)):
 		push_error("UI controller cannot play locked track %s while respect_track_lock_status is true." % id)
 		return
 	
@@ -313,7 +313,10 @@ func skip_to_previous_track() -> void:
 	if _shuffle:
 		if _shuffle_history.is_empty():
 			if _loop == LoopBehavior.LOOP:
-				_shuffle_history.assign(get_album().get_all_tracks().map(func(t): return t.id))
+				var tracks := _get_unlocked_tracks_in_album() \
+						if respect_track_lock_status \
+						else get_album().get_all_tracks()
+				_shuffle_history.assign(tracks.map(func(t): return t.id))
 				_shuffle_history.shuffle()
 				_queued_tracks_next_loop = [_playing_track_id] + _queued_tracks.duplicate()
 				_queued_tracks.clear()
@@ -329,14 +332,20 @@ func skip_to_previous_track() -> void:
 	
 	if get_album().is_first_track(_playing_track_id):
 		if _loop == LoopBehavior.LOOP:
+			var track := _get_last_unlocked_track_in_album() \
+					if respect_track_lock_status \
+					else get_album().get_last_track()
 			const SELECT := false
 			const QUEUE_FOLLOWING := true # No info to retain because we are unshuffled, and we want to clear the queue as we're going to a previous loop
-			play_track(get_album().get_last_track().id, SELECT, QUEUE_FOLLOWING)
+			play_track(track.id, SELECT, QUEUE_FOLLOWING)
 		return
 	
+	var track := _get_previous_unlocked_track_in_album(_playing_track_id) \
+			if respect_track_lock_status \
+			else get_album().get_previous_track(_playing_track_id)
 	const SELECT := false
 	const QUEUE_FOLLOWING := true # No info to retain because we are unshuffled; convenient as it saves having to prepend current track to queue
-	play_track(get_album().get_previous_track(_playing_track_id).id, SELECT, QUEUE_FOLLOWING)
+	play_track(track.id, SELECT, QUEUE_FOLLOWING)
 
 
 ## Skips backwards by typical rules for media players. Specifically, skips to
@@ -355,9 +364,14 @@ func skip_backward() -> void:
 		skip_to_previous_track()
 		return
 	
-	if (not _shuffle) and not get_album().is_first_track(_playing_track_id):
-		skip_to_previous_track()
-		return
+	if not _shuffle:
+		if respect_track_lock_status and not _is_first_unlocked_track_in_album(_playing_track_id):
+			skip_to_previous_track()
+			return
+		
+		if (not respect_track_lock_status) and not get_album().is_first_track(_playing_track_id):
+			skip_to_previous_track()
+			return
 	
 	# There is no previous track.
 	skip_to_track_beginning()
@@ -520,6 +534,76 @@ func get_playback_or_seek_position() -> float:
 		return SVJukebox.get_playback_position()
 	
 	return _seek
+
+
+func _get_unlocked_tracks_in_album() -> Array[TrackInfo]:
+	const INCLUDE_HIDDEN := false
+	var tracks := get_album().get_all_tracks(INCLUDE_HIDDEN)
+	
+	return tracks.filter(func (t: TrackInfo) -> bool: return SVJukebox.is_unlocked(t.id))
+
+
+func _get_next_unlocked_track_in_album(id: String) -> TrackInfo:
+	var tracks := _get_unlocked_tracks_in_album()
+	var index := tracks.find_custom(func (t: TrackInfo) -> bool: return t.id == id)
+	
+	if index < 0:
+		push_error("Track with id \"%s\" does not have a next unlocked track, as it is not an unlocked track." % id)
+		return null
+	
+	var next_index := index + 1
+	
+	if next_index >= tracks.size():
+		# There is no next track
+		return null
+	
+	return tracks[next_index]
+
+
+func _get_previous_unlocked_track_in_album(id: String) -> TrackInfo:
+	var tracks := _get_unlocked_tracks_in_album()
+	var index := tracks.find_custom(func (t: TrackInfo) -> bool: return t.id == id)
+	
+	if index < 0:
+		push_error("Track with id \"%s\" does not have a previous unlocked track, as it is not an unlocked track." % id)
+		return null
+	
+	if index == 0:
+		# There is no previous track
+		return null
+	
+	return tracks[index - 1]
+
+
+func _get_first_unlocked_track_in_album() -> TrackInfo:
+	var tracks := _get_unlocked_tracks_in_album()
+	
+	for track in tracks:
+		if SVJukebox.is_unlocked(track.id):
+			return track
+	
+	push_error("There are no unlocked tracks in the album.")
+	return null
+
+
+func _get_last_unlocked_track_in_album() -> TrackInfo:
+	var tracks := _get_unlocked_tracks_in_album()
+	
+	for index in range(tracks.size() -1, -1, -1):
+		if SVJukebox.is_unlocked(tracks[index].id):
+			return tracks[index]
+	
+	push_error("There are no unlocked tracks in the album.")
+	return null
+
+
+func _is_first_unlocked_track_in_album(id: String) -> bool:
+	var first_track := _get_first_unlocked_track_in_album()
+	
+	if first_track == null:
+		return false
+	
+	return id == first_track.id
 
 
 func _swap_to_linear_stream_if_available() -> void:
