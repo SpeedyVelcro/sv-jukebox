@@ -18,6 +18,30 @@ func _on_unlock_invasion_button_pressed() -> void:
 	SVJukebox.unlock("invasion")
 
 
+func _on_play_meager_button_pressed() -> void:
+	SVJukebox.play("meager")
+
+
+func _on_play_meager_no_unlock_button_pressed() -> void:
+	SVJukebox.play_no_unlock("meager")
+
+
+func _on_unlock_meager_button_pressed() -> void:
+	SVJukebox.unlock("meager")
+
+
+func _on_play_firefly_button_pressed() -> void:
+	SVJukebox.play("firefly")
+
+
+func _on_play_firefly_no_unlock_button_pressed() -> void:
+	SVJukebox.play_no_unlock("firefly")
+
+
+func _on_unlock_firefly_button_pressed() -> void:
+	SVJukebox.unlock("firefly")
+
+
 func _on_play_anxiety_button_pressed() -> void:
 	SVJukebox.play("anxiety")
 
