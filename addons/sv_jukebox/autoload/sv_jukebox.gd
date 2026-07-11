@@ -110,8 +110,11 @@ func play(id: String, from_position: float = 0.0, transition: TransitionType = T
 		return
 
 
-# TODO: play_no_unlock method so that you don't have to pass every other argument.
-
+## As [method play], but defaults to not unlocking the track without having to pass
+## the argument in at the end. Provided as a convenience function to save putting all
+## the other arguments in.
+func play_no_unlock(id: String, from_position: float = 0.0, transition: TransitionType = TransitionType.INSTANT, transition_duration_secs: float = 1.0) -> void:
+	play(id, from_position, transition, transition_duration_secs, false)
 
 ## Plays the given [AudioStream]. Similar to [method play], but allows you to
 ## play unregistered tracks. Returns true if successful.

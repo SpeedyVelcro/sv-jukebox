@@ -10,12 +10,20 @@ func _on_play_invasion_button_pressed() -> void:
 	SVJukebox.play("invasion")
 
 
-func _on_unlock_invasion_button_2_pressed() -> void:
+func _on_play_invasion_no_unlock_button_pressed() -> void:
+	SVJukebox.play_no_unlock("invasion")
+
+
+func _on_unlock_invasion_button_pressed() -> void:
 	SVJukebox.unlock("invasion")
 
 
 func _on_play_anxiety_button_pressed() -> void:
 	SVJukebox.play("anxiety")
+
+
+func _on_play_anxiety_no_unlock_button_pressed() -> void:
+	SVJukebox.play_no_unlock("anxiety")
 
 
 func _on_unlock_anxiety_button_pressed() -> void:
@@ -24,6 +32,10 @@ func _on_unlock_anxiety_button_pressed() -> void:
 
 func _on_play_petra_button_pressed() -> void:
 	SVJukebox.play("petra")
+
+
+func _on_play_petra_no_unlock_button_pressed() -> void:
+	pass # Replace with function body.
 
 
 func _on_unlock_petra_button_pressed() -> void:

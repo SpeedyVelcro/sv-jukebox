@@ -75,19 +75,27 @@ autowrap_mode = 3
 [node name="GridContainer" type="GridContainer" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer" unique_id=2104768591]
 layout_mode = 2
 size_flags_horizontal = 3
-columns = 2
+columns = 3
 
 [node name="PlayInvasionButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=835201631]
 layout_mode = 2
 text = "Play Invasion"
 
-[node name="UnlockInvasionButton2" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=592211313]
+[node name="PlayInvasionNoUnlockButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1719991716]
+layout_mode = 2
+text = "Play Invasion (No Unlock)"
+
+[node name="UnlockInvasionButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=592211313]
 layout_mode = 2
 text = "Unlock Invasion"
 
 [node name="PlayAnxietyButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=511238767]
 layout_mode = 2
 text = "Play Anxiety"
+
+[node name="PlayAnxietyNoUnlockButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=956059069]
+layout_mode = 2
+text = "Play Anxiety (No Unlock)"
 
 [node name="UnlockAnxietyButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1371751188]
 layout_mode = 2
@@ -96,6 +104,10 @@ text = "Unlock Anxiety"
 [node name="PlayPetraButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1623010966]
 layout_mode = 2
 text = "Play Petra"
+
+[node name="PlayPetraNoUnlockButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1717358651]
+layout_mode = 2
+text = "Play Petra (No Unlock)"
 
 [node name="UnlockPetraButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1929231842]
 layout_mode = 2
@@ -249,10 +261,13 @@ layout_mode = 2
 text = "Back To Sim"
 
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/PlayInvasionButton" to="." method="_on_play_invasion_button_pressed"]
-[connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/UnlockInvasionButton2" to="." method="_on_unlock_invasion_button_2_pressed"]
+[connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/PlayInvasionNoUnlockButton" to="." method="_on_play_invasion_no_unlock_button_pressed"]
+[connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/UnlockInvasionButton" to="." method="_on_unlock_invasion_button_pressed"]
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/PlayAnxietyButton" to="." method="_on_play_anxiety_button_pressed"]
+[connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/PlayAnxietyNoUnlockButton" to="." method="_on_play_anxiety_no_unlock_button_pressed"]
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/UnlockAnxietyButton" to="." method="_on_unlock_anxiety_button_pressed"]
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/PlayPetraButton" to="." method="_on_play_petra_button_pressed"]
+[connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/PlayPetraNoUnlockButton" to="." method="_on_play_petra_no_unlock_button_pressed"]
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer/UnlockPetraButton" to="." method="_on_unlock_petra_button_pressed"]
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/UnlockAllButton" to="." method="_on_unlock_all_button_pressed"]
 [connection signal="pressed" from="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/RemoveAllUnlocksButton" to="." method="_on_remove_all_unlocks_button_pressed"]
