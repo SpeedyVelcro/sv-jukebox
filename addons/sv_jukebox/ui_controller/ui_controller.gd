@@ -161,15 +161,17 @@ func deselect_track() -> void:
 ## shuffle is on).
 func play_album() -> void:
 	var id: String
-	if respect_track_lock_status:
-		var tracks := get_album().get_all_tracks()
-		var track_index: int = tracks.find_custom(func (t) -> bool: return SVJukebox.is_unlocked(t.id))
-		if track_index < 0:
-			push_error("Cannot play album while there are no tracks unlocked if UI controller's respect_track_unlock_status is true.")
-			return
-		id = tracks[track_index].id
+	if _shuffle:
+		if respect_track_lock_status:
+			id = _get_unlocked_tracks_in_album().pick_random().id
+		else:
+			const INCLUDE_HIDDEN := false
+			id = get_album().get_all_tracks(INCLUDE_HIDDEN).pick_random().id
 	else:
-		id = get_album().get_first_track().id
+		if respect_track_lock_status:
+			id = _get_first_unlocked_track_in_album().id
+		else:
+			id = get_album().get_first_track().id
 	
 	const SELECT := false
 	const QUEUE_FOLLOWING := true
@@ -319,10 +321,10 @@ func skip_to_previous_track() -> void:
 							if respect_track_lock_status \
 							else get_album().get_all_tracks()
 					_shuffle_history.assign(tracks.map(func(t): return t.id))
+					_shuffle_history.shuffle()
 				else:
 					_shuffle_history.assign(_shuffle_history_previous_loop)
 					_shuffle_history_previous_loop.clear()
-				_shuffle_history.shuffle()
 				_queued_tracks_next_loop.assign([_playing_track_id] + _queued_tracks.duplicate())
 				_queued_tracks.clear()
 			else:
