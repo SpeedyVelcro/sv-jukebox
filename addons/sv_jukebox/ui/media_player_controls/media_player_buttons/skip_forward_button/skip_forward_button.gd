@@ -54,6 +54,12 @@ func _on_ui_controller_resuming() -> void:
 	update_disabled_status()
 
 
+# Signal connection
+func _on_ui_controller_loop_behavior_changed(to: SVJukeboxUIController.LoopBehavior) -> void:
+	# Loop behavior affects whether there is a next track after the last track in the album
+	update_disabled_status()
+
+
 ## Checks UI controller to see if any track is queued that can be skipped to,
 ## and enables or disables the button appropriately.
 func update_disabled_status() -> void:
@@ -79,6 +85,9 @@ func _connect_controller_signals() -> void:
 	
 	if not ui_controller.resuming.is_connected(_on_ui_controller_resuming):
 		ui_controller.resuming.connect(_on_ui_controller_resuming)
+	
+	if not ui_controller.loop_behavior_changed.is_connected(_on_ui_controller_loop_behavior_changed):
+		ui_controller.loop_behavior_changed.connect(_on_ui_controller_loop_behavior_changed)
 
 
 func _disconnect_controller_signals() -> void:
@@ -96,6 +105,9 @@ func _disconnect_controller_signals() -> void:
 	
 	if ui_controller.resuming.is_connected(_on_ui_controller_resuming):
 		ui_controller.resuming.disconnect(_on_ui_controller_resuming)
+	
+	if ui_controller.loop_behavior_changed.is_connected(_on_ui_controller_loop_behavior_changed):
+		ui_controller.loop_behavior_changed.disconnect(_on_ui_controller_loop_behavior_changed)
 
 
 # Override

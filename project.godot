@@ -38,3 +38,4 @@ rendering_device/driver.windows="d3d12"
 [sv_jukebox]
 
 general/album="uid://bw7sa0ovmrrmh"
+general/always_unlocked=["download", "militia"]

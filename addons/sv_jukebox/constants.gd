@@ -20,3 +20,6 @@ const SETTINGS_AUDIO_BUS_NAME := _SETTINGS_GENERAL_PATH + "/audio_bus_name"
 ## Path for the setting in [ProjectSettings] that sets the path to the save file
 ## that will persist music unlock states.
 const SETTINGS_UNLOCKS_FILE_PATH := _SETTINGS_GENERAL_PATH + "/unlocks_file"
+## Path for the setting in [ProjectSettings] that sets ids to be immediately
+## and always unlocked.
+const SETTINGS_ALWAYS_UNLOCKED_PATH := _SETTINGS_GENERAL_PATH + "/always_unlocked"

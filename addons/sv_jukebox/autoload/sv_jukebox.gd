@@ -22,6 +22,7 @@ var _album: AlbumInfo = null
 var _players: Array[AudioStreamPlayer] = []
 var _audio_stream_paths: Dictionary[String, String] = {} # [id, path]
 var _unlocked_ids: Array[String]
+var _always_unlocked_ids: Array[String]
 var _current_id := ""
 var _current_player: AudioStreamPlayer = null
 # TODO: configurable max players
@@ -63,6 +64,10 @@ func _ready() -> void:
 	
 	_add_player()
 	_add_player()
+	
+	_always_unlocked_ids.assign(SVJukeboxProjectSettings.get_always_unlocked())
+	for id in _always_unlocked_ids:
+		unlocked.emit(id)
 	
 	load_unlocks()
 
@@ -325,13 +330,14 @@ func get_track_length() -> float:
 
 ## Unlock the given music track (i.e. allow it to be played in the jukebox UI)
 func unlock(id: String) -> void:
-	if not _unlocked_ids.has(id):
+	if not is_unlocked(id):
 		_unlocked_ids.append(id)
 		unlocked.emit(id)
 
 
 ## Locks the given track so it can't be played in the jukebox UI. Opposite of
-## [method unlock].
+## [method unlock]. Cannot lock tracks that are marked as "always unlocked" in
+## project settings.
 func remove_unlock(id: String) -> void:
 	if _unlocked_ids.has(id):
 		_unlocked_ids.erase(id)
@@ -344,7 +350,8 @@ func unlock_all() -> void:
 		unlock(id)
 
 
-## Locks all tracks so they can't be played in the jukebox UI.
+## Locks all tracks so they can't be played in the jukebox UI. Only tracks that
+## are marked as "always unlocked" in project settings will remain.
 func remove_all_unlocks() -> void:
 	for id in _audio_stream_paths.keys():
 		remove_unlock(id)
@@ -352,7 +359,7 @@ func remove_all_unlocks() -> void:
 
 ## Returns true if the given music track is unlocked e.g. by using [method unlock].
 func is_unlocked(id: String) -> bool:
-	return _unlocked_ids.has(id)
+	return _always_unlocked_ids.has(id) or _unlocked_ids.has(id)
 
 
 ## Returns [code]true[/code] if the given music track has not been unlocked.
@@ -423,6 +430,13 @@ func _serialize_unlocks() -> Dictionary:
 	# TODO: Move unlocked_ids to a constant
 	dict["unlocked_ids"] = []
 	dict["unlocked_ids"].assign(_unlocked_ids)
+	
+	# We will also save those marked "always unlocked" so they will still be
+	# unlocked even if future updates to the game remove those tracks from
+	# project settings.
+	for id in _always_unlocked_ids:
+		if not dict["unlocked_ids"].has(id):
+			dict["unlocked_ids"].append(id)
 	
 	return dict
 
