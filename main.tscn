@@ -91,21 +91,27 @@ text = "Unlock Invasion"
 
 [node name="PlayMeagerButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1894560449]
 layout_mode = 2
+text = "Play Meager"
 
 [node name="PlayMeagerNoUnlockButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1097560299]
 layout_mode = 2
+text = "Play Meager (No Unlock)"
 
 [node name="UnlockMeagerButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=393344280]
 layout_mode = 2
+text = "Unlock Meager"
 
 [node name="PlayFireflyButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=183114335]
 layout_mode = 2
+text = "Play Firefly"
 
 [node name="PlayFireflyNoUnlockButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=1343097430]
 layout_mode = 2
+text = "Play Firefly (No Unlock)"
 
 [node name="UnlockFireflyButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=998525165]
 layout_mode = 2
+text = "Unlock Firefly"
 
 [node name="PlayAnxietyButton" type="Button" parent="Control/SimControl/VBoxContainer/HBoxContainer2/VBoxContainer/GridContainer" unique_id=511238767]
 layout_mode = 2
