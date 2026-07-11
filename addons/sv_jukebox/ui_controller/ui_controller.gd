@@ -76,9 +76,10 @@ var _loop: LoopBehavior = LoopBehavior.NONE
 var _shuffle := false
 var _queued_tracks: Array[String]
 ## Tracks queued in this array are considered part of the next loop and will not
-## be played if looping is off.
+## be played if looping is off. Only used for shuffling, where each loop is different.
 var _queued_tracks_next_loop: Array[String]
 var _shuffle_history: Array[String]
+var _shuffle_history_previous_loop: Array[String]
 var _stream_is_linear = false
 var _is_seeking := false
 var _seek: float = 0.0
@@ -228,7 +229,6 @@ func play_track(id: String, select := true, queue_following := true, force_same 
 		return
 	
 	if queue_following:
-		_shuffle_history.clear()
 		if _shuffle:
 			const INCLUDE_HIDDEN := false
 			_queued_tracks.assign(get_album() \
@@ -313,10 +313,15 @@ func skip_to_previous_track() -> void:
 	if _shuffle:
 		if _shuffle_history.is_empty():
 			if _loop == LoopBehavior.LOOP:
-				var tracks := _get_unlocked_tracks_in_album() \
-						if respect_track_lock_status \
-						else get_album().get_all_tracks()
-				_shuffle_history.assign(tracks.map(func(t): return t.id))
+				# Refill shuffle history
+				if _shuffle_history_previous_loop.is_empty():
+					var tracks := _get_unlocked_tracks_in_album() \
+							if respect_track_lock_status \
+							else get_album().get_all_tracks()
+					_shuffle_history.assign(tracks.map(func(t): return t.id))
+				else:
+					_shuffle_history.assign(_shuffle_history_previous_loop)
+					_shuffle_history_previous_loop.clear()
 				_shuffle_history.shuffle()
 				_queued_tracks_next_loop.assign([_playing_track_id] + _queued_tracks.duplicate())
 				_queued_tracks.clear()
@@ -391,14 +396,28 @@ func skip_to_next_track() -> void:
 		skip_to_track_beginning()
 		return
 	
+	# This is ugly but appears to work. Be very careful editing this that you don't break shuffle history and future.
 	if _queued_tracks.is_empty():
 		if _loop == LoopBehavior.LOOP:
-			play_album()
+			if _shuffle:
+				_shuffle_history_previous_loop.assign(_shuffle_history)
+				_shuffle_history.clear()
+			
+			if _shuffle and not _queued_tracks_next_loop.is_empty():
+				_queued_tracks.assign(_queued_tracks_next_loop)
+				_queued_tracks_next_loop.clear()
+				skip_to_next_track() # Try again using our record of the next loop
+			else:
+				play_album()
 		return
 	
 	var next := _queued_tracks.pop_front()
+	_shuffle_history.append(_playing_track_id)
+	
 	const SELECT := false
 	const QUEUE_FOLLOWING := false
+	# TODO: if play_track has an error, nothing will happen, but we will have just
+	# messed up _queued_tracks and _shuffle_history
 	play_track(next, SELECT, QUEUE_FOLLOWING)
 
 
@@ -464,6 +483,9 @@ func set_shuffle_behavior(shuffle: bool) -> void:
 				.get_tracks_from(_playing_track_id) \
 				.map(func(t): return t.id))
 		_queued_tracks.pop_front() # TODO: highly inefficient. Might be better if queued tracks was reversed
+		_shuffle_history.clear()
+		_shuffle_history_previous_loop.clear()
+		_queued_tracks_next_loop.clear()
 	
 	if respect_track_lock_status:
 		_queued_tracks.assign(_queued_tracks.filter(func (id) -> bool: return SVJukebox.is_unlocked(id)))
