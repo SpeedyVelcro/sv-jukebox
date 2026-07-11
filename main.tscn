@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dia8o3sgcsxka" path="res://addons/sv_jukebox/ui/media_player_controls/time_label/time_label.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" uid="uid://8ep2u88yr68m" path="res://addons/sv_jukebox/ui/info/selected_liner_notes/selected_liner_notes.tscn" id="4_272bh"]
 [ext_resource type="PackedScene" uid="uid://i2onovq88kp6" path="res://addons/sv_jukebox/ui/media_player_controls/seek_bar/seek_bar.tscn" id="4_lquwl"]
+[ext_resource type="PackedScene" uid="uid://fe0fxs0lyk1a" path="res://addons/sv_jukebox/ui/info/currently_playing_title/currently_playing_title.tscn" id="8_dg77c"]
 [ext_resource type="PackedScene" uid="uid://cxkio4e0gvbaa" path="res://addons/sv_jukebox/ui/download_album_button/download_album_button.tscn" id="11_efxa6"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_7dm0k"]
@@ -23,6 +24,12 @@ variation_embolden = 1.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_4c57u"]
 font = SubResource("FontVariation_kek77")
+
+[sub_resource type="FontVariation" id="FontVariation_dg77c"]
+variation_embolden = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_ycdy4"]
+font = SubResource("FontVariation_dg77c")
 
 [node name="Main" type="Node" unique_id=1580518421]
 script = ExtResource("1_ig7tw")
@@ -187,6 +194,18 @@ ui_controller = NodePath("../../../../SVJukeboxUIController")
 [node name="SelectedLinerNotes" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1854171085 node_paths=PackedStringArray("ui_controller") instance=ExtResource("4_272bh")]
 layout_mode = 2
 ui_controller = NodePath("../../../../SVJukeboxUIController")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=221416299]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1751454021]
+layout_mode = 2
+text = "Now Playing:"
+label_settings = SubResource("LabelSettings_ycdy4")
+
+[node name="CurrentlyPlayingTitle" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2" unique_id=1375628940 node_paths=PackedStringArray("ui_controller") instance=ExtResource("8_dg77c")]
+layout_mode = 2
+ui_controller = NodePath("../../../../../SVJukeboxUIController")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/JukeboxControl/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1593328619]
 layout_mode = 2

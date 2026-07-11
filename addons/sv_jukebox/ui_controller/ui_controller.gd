@@ -63,6 +63,11 @@ signal pausing
 signal resuming
 ## Emitting when stopping playback, either with a [method stop] call, or because
 ## a track has finished without looping set and no further tracks are queued.
+##
+## This signal is emitted AFTER all the relevant variables have been applied
+## (so, for example, [method get_playing_track_info] will return null), but
+## there may still be a fadeout to complete based on transition settings, hence
+## the name "stopping".
 signal stopping
 
 var _selected_track_id := ""
@@ -94,6 +99,24 @@ func get_selected_track_info(show_error := true) -> TrackInfo:
 		return null
 	
 	return get_album().get_track_info(_selected_track_id, show_error)
+
+
+## Get the [TrackInfo] of the currently playing track. Returns null if no track
+## is playing, and returns null AND pushes an error if the track doesn't exist.
+## You can pass in an argument to suppress errors.
+func get_playing_track_info(show_error := true) -> TrackInfo:
+	if _playing_track_id.is_empty():
+		return null
+	
+	return get_album().get_track_info(_playing_track_id, show_error)
+
+
+## Gets the [AlbumInfo] of the album of the currently playing track.
+func get_playing_album_info() -> AlbumInfo:
+	# Currently, because the UI controller only supports a single album, this
+	# is the same as [method get_album]. In future, this might be different if
+	# the jukebox UI is updated to support multiple albums.
+	return get_album()
 
 
 ## Gets the album. Differs from accessing [member album] directly as it falls
@@ -254,6 +277,7 @@ func stop(keep_selection := true) -> void:
 		return
 	
 	SVJukebox.stop() # TODO: Transitions are configurable with export variables
+	_playing_track_id = ""
 	stopping.emit()
 	
 	if not keep_selection:

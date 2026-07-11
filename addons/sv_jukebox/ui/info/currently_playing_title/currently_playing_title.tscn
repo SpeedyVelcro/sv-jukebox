@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://fe0fxs0lyk1a"]
+
+[ext_resource type="Script" uid="uid://cdkklfdo2fbxk" path="res://addons/sv_jukebox/ui/info/currently_playing_title/currently_playing_title.gd" id="1_2h2u0"]
+
+[node name="CurrentlyPlayingTitle" type="Label" unique_id=1375628940]
+text = "Album - Track"
+script = ExtResource("1_2h2u0")
