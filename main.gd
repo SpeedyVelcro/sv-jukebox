@@ -35,7 +35,7 @@ func _on_play_petra_button_pressed() -> void:
 
 
 func _on_play_petra_no_unlock_button_pressed() -> void:
-	pass # Replace with function body.
+	SVJukebox.play_no_unlock("petra")
 
 
 func _on_unlock_petra_button_pressed() -> void:
