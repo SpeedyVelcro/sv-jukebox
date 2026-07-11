@@ -399,22 +399,30 @@ func skip_to_next_track() -> void:
 		return
 	
 	# This is ugly but appears to work. Be very careful editing this that you don't break shuffle history and future.
+	var _already_placed_current_track_into_history := false
 	if _queued_tracks.is_empty():
 		if _loop == LoopBehavior.LOOP:
 			if _shuffle:
+				# Shift shuffle history to previous loop
 				_shuffle_history_previous_loop.assign(_shuffle_history)
 				_shuffle_history.clear()
+				# Special handling for current track: because we are entering a new loop it should go into the PREVIOUS loop's history.
+				_shuffle_history_previous_loop.append(_playing_track_id)
+				_already_placed_current_track_into_history = true
 			
 			if _shuffle and not _queued_tracks_next_loop.is_empty():
+				# Shift queued tracks 
 				_queued_tracks.assign(_queued_tracks_next_loop)
 				_queued_tracks_next_loop.clear()
-				skip_to_next_track() # Try again using our record of the next loop
 			else:
 				play_album()
-		return
+				return
+		else:
+			return
 	
 	var next := _queued_tracks.pop_front()
-	_shuffle_history.append(_playing_track_id)
+	if not _already_placed_current_track_into_history:
+		_shuffle_history.append(_playing_track_id)
 	
 	const SELECT := false
 	const QUEUE_FOLLOWING := false
