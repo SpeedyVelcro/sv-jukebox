@@ -318,7 +318,7 @@ func skip_to_previous_track() -> void:
 						else get_album().get_all_tracks()
 				_shuffle_history.assign(tracks.map(func(t): return t.id))
 				_shuffle_history.shuffle()
-				_queued_tracks_next_loop = [_playing_track_id] + _queued_tracks.duplicate()
+				_queued_tracks_next_loop.assign([_playing_track_id] + _queued_tracks.duplicate())
 				_queued_tracks.clear()
 			else:
 				return
