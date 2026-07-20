@@ -1,7 +1,7 @@
 # SV Jukebox
 
-Rudimentary Godot addon for playing music. The main attraction will be a jukebox
-UI for playing game soundtracks in-game from the menu. Currently a work-in-progress.
+Rudimentary Godot addon for playing music. The main attraction is a jukebox
+UI for playing game soundtracks in-game from the menu.
 
 ![Screenshot of jukebox UI](readme_screenshot.png)
 
