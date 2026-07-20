@@ -13,4 +13,4 @@ UI for playing game soundtracks in-game from the menu.
 - Enable the `SV Jukebox` plugin under `Project > Project Settings... > Plugins`
 
 ## License
-See [LICENSE.txt].
+See [`LICENSE.txt`](LICENSE.txt).
