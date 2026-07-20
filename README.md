@@ -3,6 +3,8 @@
 Rudimentary Godot addon for playing music. The main attraction will be a jukebox
 UI for playing game soundtracks in-game from the menu. Currently a work-in-progress.
 
+![Screenshot of jukebox UI](readme_screenshot.png)
+
 ## Usage
 - Requires Godot 4.6
 - Clone the repository
