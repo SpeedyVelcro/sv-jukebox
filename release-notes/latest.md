@@ -1,1 +1,0 @@
-- Fix crash when using `SVJukebox.stop()` with a fadeout.
