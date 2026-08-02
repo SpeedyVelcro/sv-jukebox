@@ -191,18 +191,20 @@ func stop(transition: TransitionType = TransitionType.INSTANT, transition_durati
 			_current_player.stream = null
 		TransitionType.FADE_OUT, TransitionType.CROSS_FADE:
 			var tween: Tween = get_tree().create_tween()
-			if not _current_player.stream_paused:
-				tween.tween_property(_current_player, "volume_linear", 0.0, transition_duration_secs)
-			tween.tween_callback(func () -> void: _current_player.stop())
-			tween.tween_callback(func () -> void: _current_player.stream = null)
+			var player := _current_player # Capture current player because it is going to be set to null
+			if not player.stream_paused:
+				tween.tween_property(player, "volume_linear", 0.0, transition_duration_secs)
+			tween.tween_callback(func () -> void: player.stop())
+			tween.tween_callback(func () -> void: player.stream = null)
 			tween.play()
 		TransitionType.FADE_OUT_IN:
 			# Half-duration to match behaviour of playing a new track.
 			var tween: Tween = get_tree().create_tween()
-			if not _current_player.stream_paused:
-				tween.tween_property(_current_player, "volume_linear", 0.0, transition_duration_secs / 2)
-			tween.tween_callback(func () -> void: _current_player.stop())
-			tween.tween_callback(func () -> void: _current_player.stream = null)
+			var player := _current_player # Capture current player because it is going to be set to null
+			if not player.stream_paused:
+				tween.tween_property(player, "volume_linear", 0.0, transition_duration_secs / 2)
+			tween.tween_callback(func () -> void: player.stop())
+			tween.tween_callback(func () -> void: player.stream = null)
 			tween.play()
 	
 	_current_id = ""
