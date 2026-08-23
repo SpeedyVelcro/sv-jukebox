@@ -51,33 +51,33 @@ func _get_timestamp() -> String:
 	return format_string % _get_segments_for_format_string(format_string, time)
 
 
-func _get_time() -> float:
+func _get_time() -> int:
 	if ui_controller == null:
 		push_error("UI controller not set on time label. Returning default seek position.")
-		return 0.0
+		return 0
 	
 	match type:
 		TimestampType.ZERO:
-			return 0.0
+			return 0
 		TimestampType.POSITION:
-			return ui_controller.get_playback_or_seek_position()
+			return floori(ui_controller.get_playback_or_seek_position())
 		TimestampType.LENGTH:
-			return SVJukebox.get_track_length()
+			return floori(SVJukebox.get_track_length())
 		TimestampType.DIFFERENCE, TimestampType.DIFFERENCE_NEGATIVE: # Negative sign is done using formatting, so underlying number is the same.
-			return max(0, SVJukebox.get_track_length() - ui_controller.get_playback_or_seek_position())
+			return max(0, floori(SVJukebox.get_track_length()) - floori(ui_controller.get_playback_or_seek_position()))
 		_:
 			push_error("Time label has invalid timestamp type.")
-			return 0.0
+			return 0
 
 
 func _get_format_string() -> String:
-	var length := SVJukebox.get_track_length()
+	var length := floori(SVJukebox.get_track_length())
 	
 	var format_string: String
 	
-	if length < 60.0 and not always_include_minutes:
+	if length < 60 and not always_include_minutes:
 		format_string = "%02d" if pad_leading_zeroes else "%d"
-	elif length < 3600.0:
+	elif length < 3600:
 		format_string = "%02d:%02d" if pad_leading_zeroes else "%d:%02d"
 	else:
 		format_string = "%02d:%02d:%02d" if pad_leading_zeroes else "%d:%02d:%02d"
@@ -88,7 +88,7 @@ func _get_format_string() -> String:
 	return format_string
 
 
-func _get_segments_for_format_string(format_string: String, time: float) -> Array[int]:
+func _get_segments_for_format_string(format_string: String, time: int) -> Array[int]:
 	var segment_count := format_string.count("%")
 	
 	var segments: Array[int] = []
@@ -100,18 +100,19 @@ func _get_segments_for_format_string(format_string: String, time: float) -> Arra
 		segments.append(_get_minutes_segment(time))
 	
 	if segment_count >= 1:
+		var round_secs_up := type == TimestampType.DIFFERENCE or type == TimestampType.DIFFERENCE_NEGATIVE
 		segments.append(_get_seconds_segment(time))
 	
 	return segments
 
 
-func _get_seconds_segment(time: float) -> int:
-	return floori(time) % 60
+func _get_seconds_segment(time: int) -> int:
+	return time % 60
 
 
-func _get_minutes_segment(time: float) -> int:
-	return (floori(time) / 60) % 3600
+func _get_minutes_segment(time: int) -> int:
+	return (time / 60) % 3600
 
 
-func _get_hours_segment(time: float) -> int:
-	return floori(time) / 3600
+func _get_hours_segment(time: int) -> int:
+	return time / 3600
