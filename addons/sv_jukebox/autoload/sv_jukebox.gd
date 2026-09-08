@@ -262,15 +262,22 @@ func resume(transition: TransitionType = TransitionType.INSTANT, transition_dura
 
 
 ## Seeks to the given position for the currently playing track.
-func seek(to_position: float) -> void:
+func seek(to_position: float, force_when_paused := false) -> void:
 	if _current_player == null:
 		return
+	
+	var original_pause_state := _current_player.stream_paused
+	if force_when_paused:
+		_current_player.stream_paused = false
 	
 	# TODO: should it be possible to do a transition for this? Wouldn't be dependent on implementing
 	# force_play() for playing tracks with same id, because we would just use play_stream() to support
 	# tracks started with both play() and play_stream(). But you would need a way to do play_stream()
 	# while preserving _current_id.
 	_current_player.seek(to_position)
+	
+	if force_when_paused:
+		_current_player.stream_paused = original_pause_state
 
 
 ## Attempts to seamlessly swap the currently playing audio stream with another

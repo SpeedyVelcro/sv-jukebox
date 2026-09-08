@@ -550,7 +550,8 @@ func end_seek() -> void:
 	
 	_is_seeking = false
 	
-	SVJukebox.seek(_seek)
+	const FORCE_WHEN_PAUSED := true
+	SVJukebox.seek(_seek, FORCE_WHEN_PAUSED)
 
 
 ## Returns true if the user is currently using the UI to seek through the track.
