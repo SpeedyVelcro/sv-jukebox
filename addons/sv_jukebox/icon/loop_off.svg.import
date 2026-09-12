@@ -15,4 +15,6 @@ dest_files=["res://.godot/imported/loop_off.svg-87e539f385b5bf9bbf3a22136aa6673b
 base_scale=1.0
 saturation=1.0
 color_map={}
+fix_alpha_border=false
+premult_alpha=false
 compress=true

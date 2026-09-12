@@ -34,21 +34,41 @@ loop_one_icon = ExtResource("11_y5lo3")
 
 [node name="SkipBackwardButton" parent="." unique_id=1639146383 instance=ExtResource("7_q3lxt")]
 layout_mode = 2
+focus_neighbor_right = NodePath("../StopButton")
+focus_next = NodePath("../StopButton")
 
 [node name="StopButton" parent="." unique_id=1162309528 instance=ExtResource("4_vw4ta")]
 layout_mode = 2
+focus_neighbor_left = NodePath("../SkipBackwardButton")
+focus_neighbor_right = NodePath("../PlayPauseButton")
+focus_next = NodePath("../PlayPauseButton")
+focus_previous = NodePath("../SkipBackwardButton")
 
 [node name="PlayPauseButton" parent="." unique_id=1406065625 instance=ExtResource("1_51pkj")]
 layout_mode = 2
+focus_neighbor_left = NodePath("../StopButton")
+focus_neighbor_right = NodePath("../SkipForwardButton")
+focus_next = NodePath("../SkipForwardButton")
+focus_previous = NodePath("../StopButton")
 
 [node name="SkipForwardButton" parent="." unique_id=182009163 instance=ExtResource("6_o1y0g")]
 layout_mode = 2
+focus_neighbor_left = NodePath("../PlayPauseButton")
+focus_neighbor_right = NodePath("../ShuffleButton")
+focus_next = NodePath("../ShuffleButton")
+focus_previous = NodePath("../PlayPauseButton")
 
 [node name="VSeparator" type="VSeparator" parent="." unique_id=812555585]
 layout_mode = 2
 
 [node name="ShuffleButton" parent="." unique_id=1522905595 instance=ExtResource("11_rn5h3")]
 layout_mode = 2
+focus_neighbor_left = NodePath("../SkipForwardButton")
+focus_neighbor_right = NodePath("../LoopButton")
+focus_next = NodePath("../LoopButton")
+focus_previous = NodePath("../SkipForwardButton")
 
 [node name="LoopButton" parent="." unique_id=745428770 instance=ExtResource("14_w83ns")]
 layout_mode = 2
+focus_neighbor_left = NodePath("../ShuffleButton")
+focus_previous = NodePath("../ShuffleButton")
